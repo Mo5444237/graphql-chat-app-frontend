@@ -1,0 +1,52 @@
+.chat {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--bgColor-dark-100);
+  height: 100vh;
+  top: 0;
+  left: 110%;
+  flex-grow: 1;
+}
+
+.chat .header {
+  background-color: var(--bgColor-dark-100);
+  border-bottom: 1px solid var(--bgColor-dark-200);
+  padding: .75rem 1rem;
+  z-index: 20;
+}
+
+.chat .header .info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.chat .header .info .avatar {
+  width: 50px;
+  height: 50px;
+}
+
+.header .info .avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.header .info h3,
+.header .info p {
+  margin: 0;
+}
+
+.header .info p {
+  color: var(--fgColor-muted);
+}
+
+.chat .body {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  gap: 1rem;
+  padding: 1rem;
+  flex-grow: 1;
+}

@@ -1,0 +1,41 @@
+.chats-container {
+  display: flex;
+  gap: 1rem;
+  max-height: 100vh;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.chats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 20rem;
+}
+
+.chats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow: auto;
+  padding: .75rem;
+  padding-left: 0;
+}
+
+.active {
+  background-color: var(--bgColor-dark-300);
+}
+
+.select {
+  height: 100vh;
+  margin: 0;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.25rem;
+  flex-grow: 1;
+  background-color: var(--bgColor-dark-100);
+}

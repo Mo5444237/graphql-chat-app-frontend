@@ -1,0 +1,9 @@
+.icon {
+    width: 2rem;
+    height: auto;
+    cursor: pointer;
+}
+
+.icon path {
+ stroke: var(--fgColor-default);
+}

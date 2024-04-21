@@ -1,0 +1,99 @@
+.form__group {
+  position: relative;
+  padding: 20px 0 0;
+  width: 100%;
+  margin-bottom: 0.7rem;
+}
+
+.form__field {
+  font-family: inherit;
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid var(--fgColor-muted);
+  outline: 0;
+  font-size: 17px;
+  padding: 8px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+}
+
+.form__field::placeholder {
+  color: transparent;
+}
+
+.form__field:placeholder-shown ~ .form__label {
+  font-size: 17px;
+  cursor: text;
+  top: 30px;
+}
+
+.form__field:-internal-autofill-selected {
+  background-color: transparent !important;
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px var(--bgColor-dark-200) inset !important;
+}
+
+.form__label {
+  position: absolute;
+  top: 25px;
+  display: block;
+  transition: 0.2s;
+  font-size: 17px;
+  color: var(--fgColor-muted);
+  pointer-events: none;
+}
+
+.form__field:focus {
+  font-weight: 500;
+  border-color: var(--fgColor-default);
+}
+
+.form__field:focus ~ .form__label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 17px;
+  color: var(--fgColor-default);
+  /* font-weight: 500; */
+}
+
+.form__field:not(:placeholder-shown) ~ .form__label {
+  top: 0;
+}
+
+.form__field:required,
+.form__field:invalid {
+  box-shadow: none;
+}
+
+.form__field.invalid {
+  border-color: #ff3333;
+}
+
+.form__field.invalid ~ .form__label {
+  color: #ff3333;
+}
+
+.form__group .error {
+  color: #ff3333;
+  font-size: 0.8rem;
+  display: block;
+}
+
+.actions {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.form__group .show-password {
+  position: absolute;
+  right: 0rem;
+  top: 1.75rem;
+  cursor: pointer;
+  font-size: .9rem;
+  color: var(--primary-color-default);
+}
+

@@ -1,4 +1,5 @@
 .card {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -27,6 +28,10 @@
 }
 
 
+.card .content {
+    flex-grow: 1;
+}
+
 .card .content h3,
 .card .content p {
     margin: 0;
@@ -39,4 +44,21 @@
 
 .card .content p {
     color: var(--fgColor-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 90%;
+}
+
+.card .unread-messages {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: .5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background-color: var(--primary-color-default);
+    transition: all .3s ease;
 }

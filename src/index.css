@@ -15,9 +15,12 @@
   --bgColor-dark-600: #8b8b8b;
 
   --fgColor-default: #e6edf3;
-  --fgColor-muted: #848d97;
+  --fgColor-muted: #5b5f64;
 
   --border-color: #30363d;
+
+  --success-color: #82dd55;
+  --error-color: #ff4d4f;
 
   color-scheme: light dark;
 
@@ -36,8 +39,7 @@ body {
 
 main {
   height: 100vh;
-  margin-left: 3.5rem;
-  padding-left: 1rem;
+  /* margin-left: 3.5rem; */
   background-color: var(--bgColor-dark-200);
 }
 

@@ -1,0 +1,26 @@
+.menu {
+}
+
+.menu ul li {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.menu ul li:not(:last-child) {
+  padding-bottom: 1rem;
+}
+
+.menu ul li p {
+  margin: 0;
+}
+
+.menu ul li:last-child p {
+  color: var(--error-color);
+}
+
+.menu ul li:last-child svg path {
+  stroke: var(--error-color);
+}

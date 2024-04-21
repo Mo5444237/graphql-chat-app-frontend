@@ -1,0 +1,70 @@
+.container {
+    position: relative;
+}
+
+.checkboxtoggler {
+  width: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.checkboxtoggler div {
+    background: var(--fgColor-default);
+    height: 4px;
+    border-radius: 10em;
+    transition-duration: 500ms;
+}
+
+.toggleChecker {
+  height: 3rem;
+  width: 100%;
+  display: none;
+}
+
+.toggleChecker:checked + .togglerLable .checkboxtoggler .line-1 {
+  -webkit-transform: rotate(45deg) translateY(8px) translateX(8px);
+  -ms-transform: rotate(45deg) translateY(8px) translateX(8px);
+  transform: rotate(45deg) translateY(8px) translateX(8px);
+}
+
+.toggleChecker:checked + .togglerLable .checkboxtoggler .line-2 {
+  -webkit-transform: rotate(-45deg) translateY(0em) translateX(0);
+  -ms-transform: rotate(-45deg) translateY(0em) translateX(0);
+  transform: rotate(-45deg) translateY(0em) translateX(0);
+}
+
+.toggleChecker:checked + .togglerLable .checkboxtoggler .line-3 {
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.container .menu {
+    position: absolute;
+    display: none;
+    padding: 1rem;
+    z-index: 100;
+    margin-top: 1rem;
+    top: 100%;
+    left: 0;
+    width: 20rem;
+    background-color: #121212eb;
+    border-radius: 8px;
+}
+
+.container .show {
+    display: block;
+    animation: popIn 0.3s ease-out forwards;
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: translateY(-1rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

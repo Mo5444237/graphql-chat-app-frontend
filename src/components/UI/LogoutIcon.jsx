@@ -1,6 +1,6 @@
 import classes from "./Icon.module.css";
 
-function LogoutIcon() {
+function LogoutIcon(props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,28 +8,20 @@ function LogoutIcon() {
       height="800px"
       viewBox="0 0 24 24"
       fill="none"
-      className={classes.icon}
+      className={`${classes.icon} ${props.className}`}
     >
       <path
-        d="M21 12L13 12"
-        stroke="#323232"
-        strokeWidth="2"
+        d="M15 12L2 12M2 12L5.5 9M2 12L5.5 15"
+        stroke="#1C274C"
+        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M18 15L20.913 12.087V12.087C20.961 12.039 20.961 11.961 20.913 11.913V11.913L18 9"
-        stroke="#323232"
-        strokeWidth="2"
+        d="M9.00195 7C9.01406 4.82497 9.11051 3.64706 9.87889 2.87868C10.7576 2 12.1718 2 15.0002 2L16.0002 2C18.8286 2 20.2429 2 21.1215 2.87868C22.0002 3.75736 22.0002 5.17157 22.0002 8L22.0002 16C22.0002 18.8284 22.0002 20.2426 21.1215 21.1213C20.3531 21.8897 19.1752 21.9862 17 21.9983M9.00195 17C9.01406 19.175 9.11051 20.3529 9.87889 21.1213C10.5202 21.7626 11.4467 21.9359 13 21.9827"
+        stroke="#1C274C"
+        strokeWidth="1.5"
         strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M16 5V4.5V4.5C16 3.67157 15.3284 3 14.5 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H14.5C15.3284 21 16 20.3284 16 19.5V19.5V19"
-        stroke="#323232"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
       />
     </svg>
   );

@@ -1,7 +1,6 @@
 import { useRouteError } from "react-router-dom";
 
-import PageContent from "../components/Layout/PageContent";
-import MainHeader from "../components/Layout/MainHeader";
+import PageContent from "../components/layout/PageContent";
 
 function ErrorLayout() {
   const error = useRouteError();
@@ -20,7 +19,7 @@ function ErrorLayout() {
 
   return (
     <>
-      <MainHeader />
+      {/* <MainHeader /> */}
       <PageContent title={title}>
         <p>{message}</p>
       </PageContent>

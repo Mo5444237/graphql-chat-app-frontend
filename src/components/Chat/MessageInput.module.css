@@ -90,7 +90,7 @@
 .sendButton {
   width: -moz-fit-content;
   width: fit-content;
-  height: 100%;
+  height: auto;
   background-color: transparent;
   outline: none;
   border: none;

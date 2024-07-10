@@ -50,6 +50,10 @@
     max-width: 90%;
 }
 
+.card .content p.typing {
+    color: var(--primary-color-default);
+}
+
 .card .unread-messages {
     position: absolute;
     display: flex;

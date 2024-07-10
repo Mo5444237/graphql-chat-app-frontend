@@ -1,59 +1,21 @@
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import classes from "./Chat.module.css";
 import ChatInfo from "./ChatInfo";
 import Message from "./Message";
 import MessageInput from "./MessageInput";
+import { useDispatch, useSelector } from "react-redux";
+import socket from "../../services/socket";
+import { fetchChatMessages } from "../../store/chats-actions";
 
-const messages = [
-  {
-    id: 1,
-    content: "Hello",
-    sender: "me",
-  },
-  {
-    id: 2,
-    content: "Hi",
-    sender: "other",
-  },
-  {
-    id: 3,
-    content: "How are you?",
-    sender: "me",
-  },
-  {
-    id: 4,
-    content: "I'm good, thank you",
-    sender: "other",
-  },
-  {
-    id: 5,
-    content: "What about you?",
-    sender: "other",
-  },
-  {
-    id: 6,
-    content: "I'm good too",
-    sender: "me",
-  },
-  {
-    id: 7,
-    content: "How can I help you?",
-    sender: "me",
-  },
-  {
-    id: 8,
-    content: "I need help with my order",
-    sender: "other",
-  },
-  {
-    id: 9,
-    content: "Sure, I can help you with that",
-    sender: "me",
-  },
-];
+import defaultImage from "../../assets/defaultImage.png";
 
-function Chat({ chatData, ...props }) {
+function Chat({ chatData, isTyping, ...props }) {
   const [showChatInfo, setShowChatInfo] = useState(false);
+
+  const messages = useSelector((state) => state.chats.messages[chatData._id]);
+
+  const scrollRef = useRef();
+  const dispatch = useDispatch();
 
   const showChatInfoHandler = () => {
     setShowChatInfo(true);
@@ -62,6 +24,16 @@ function Chat({ chatData, ...props }) {
   const hideChatInfoHandler = () => {
     setShowChatInfo(false);
   };
+
+  useEffect(() => {
+    dispatch(fetchChatMessages(chatData._id));
+  }, [dispatch, chatData._id]);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  });
 
   return (
     <div className={`${classes.chat} ${props.className}`}>
@@ -88,20 +60,25 @@ function Chat({ chatData, ...props }) {
         </div>
         <div className={classes.info} onClick={showChatInfoHandler}>
           <div className={classes.avatar}>
-            <img src={chatData.avatar} alt="User" />
+            <img src={chatData.avatar || defaultImage} alt="User" />
           </div>
           <div className={classes.content}>
             <h3>{chatData.name}</h3>
-            <p>{chatData.lastSeen || "8:22 PM"}</p>
+            {isTyping ? (
+              <p className={classes.typing}>Typing...</p>
+            ) : (
+              <p>{chatData?.lastSeen}</p>
+            )}
           </div>
         </div>
       </div>
-      <div className={classes.body}>
-        {messages.map((message) => {
-          return <Message key={message.id} messageData={message} />;
-        })}
+      <div className={classes.body} ref={scrollRef}>
+        {messages &&
+          messages.map((message) => {
+            return <Message key={message._id} messageData={message} />;
+          })}
       </div>
-      <MessageInput />
+      <MessageInput chatId={chatData._id} users={chatData.users} />
     </div>
   );
 }

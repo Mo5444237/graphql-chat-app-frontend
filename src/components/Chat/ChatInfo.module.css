@@ -1,20 +1,32 @@
 .modal {
+  position: fixed;
   right: 0;
   top: 0;
   width: 90%;
   height: 100%;
   max-width: 25rem;
   background-color: var(--bgColor-dark-100);
+  animation: slide-left 300ms forwards !important;
+}
+
+@keyframes slide-left {
+  from {
+    opacity: 0;
+    transform: translateX(3rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
 }
-
 
 .cancel path {
   stroke: var(--fgColor-muted);
@@ -27,64 +39,60 @@
 }
 
 .modal .chat {
-    width: 100%;
-    text-align: center;
-    margin-bottom: 2rem;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
-.modal .chat img{
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 2px solid var(--fgColor-muted);
+.modal .chat img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
 }
-
 
 .modal .media {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 2rem 0;
 }
 
 .modal .media h3 {
-    margin: 0;
-    font-weight: 400;
+  margin: 0;
+  font-weight: 400;
 }
 
 .modal .media .images {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .75rem;
-    padding-left: .5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-left: 0.5rem;
 }
 
 .modal .media img {
-    width: 80px;
-    height: 80px;
-    border-radius: 8px;
-    object-fit: cover;
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
 }
 
-.modal .actions .block-action{
-    display: flex;
-    gap: .5rem;
-    align-items: center;
-    color: var(--error-color);
-    cursor: pointer;
+.modal .actions .block-action {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  color: var(--error-color);
+  cursor: pointer;
 }
 
 .modal .actions .block-action .block {
-    width: 1.5rem;
-    height: 1.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
-.modal .actions .block-action .block path{  
-    stroke: var(--error-color);
+.modal .actions .block-action .block path {
+  stroke: var(--error-color);
 }
 
 .modal .actions p {
-    margin: 0;
-
+  margin: 0;
 }
-

@@ -1,47 +1,25 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ChatCard from "./ChatCard";
 import classes from "./ChatsList.module.css";
 import Chat from "./Chat";
 import Search from "./Search";
 import Menu from "./Menu";
-
-const chats = [
-  {
-    id: 1,
-    avatar:
-      "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=740",
-    name: "John Doe",
-    lastMessage: "Hey there! How are you?",
-    unreadMessages: 2,
-  },
-  {
-    id: 2,
-    avatar:
-      "https://images.assetsdelivery.com/compings_v2/elvie15veronika/elvie15veronika2005/elvie15veronika200500053.jpg",
-    name: "Jane Doe",
-    lastMessage: "I'm good. How about you?",
-    unreadMessages: 1,
-  },
-  {
-    id: 3,
-    avatar:
-      "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=740",
-    name: "John Smith",
-    lastMessage: "Hey there! How are you?",
-    unreadMessages: 3,
-  },
-  {
-    id: 4,
-    avatar:
-      "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671116.jpg?w=740",
-    name: "Jane Smith",
-    lastMessage: "I'm good. How about you?",
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserChats } from "../../store/chats-actions";
+import ChatSkeleton from "./ChatSkeleton";
+import NewChatIcon from "../UI/NewChatIcon";
+import Contacts from "./Contacts";
+import { chatsActions } from "../../store/chats-slice";
+import socket from "../../services/socket";
 
 function ChatsList() {
   const [activeChat, setActiveChat] = useState(null);
   const [showChat, setShowChat] = useState(false);
+  const [openContacts, setOpenContacts] = useState(false);
+  const [isTyping, setIsTyping] = useState('');
+
+  const chats = useSelector((state) => state.chats);
+  const dispatch = useDispatch();
 
   const activeChatHandler = (chatData) => {
     setActiveChat(chatData);
@@ -53,6 +31,83 @@ function ChatsList() {
     setShowChat(false);
   };
 
+  const openContactsList = () => {
+    setOpenContacts(() => true);
+  };
+
+  const closeContactsList = () => {
+    setOpenContacts(() => false);
+  };
+
+  const debounce = (func, delay) => {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
+
+  // Debounce clear typing state after 2 seconds
+  const clearTypingState = useCallback(
+    debounce(() => setIsTyping(''), 2000),
+    []
+  );
+
+  useEffect(() => {
+    const handleTyping = ({ chatId, userId }) => {
+      setIsTyping(chatId);
+      clearTypingState();
+    };
+    socket.on("typing", handleTyping);
+
+    return () => {
+      socket.off("typing", handleTyping);
+    };
+  }, [clearTypingState]);
+
+  useEffect(() => {
+    socket.on("newMessage", ({ message }) => {
+      dispatch(
+        chatsActions.updateChatMessages({
+          chatId: message.chatId,
+          message: message,
+        })
+      );
+    });
+    return () => {
+      socket.off("newMessage");
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    dispatch(fetchUserChats());
+  }, [dispatch, chats.changed]);
+
+  let content;
+
+  if (chats.chats) {
+    content = chats.chats.map((chat) => (
+      <div className={classes.chat} key={chat._id}>
+        <ChatCard
+          chatData={chat}
+          onClick={activeChatHandler}
+          className={activeChat?._id === chat._id ? classes.active : null}
+          isTyping={isTyping}
+        />
+      </div>
+    ));
+  }
+
+  if (chats.isLoading) {
+    content = <ChatSkeleton />;
+  }
+
+  if (chats.error) {
+    console.log(chats.error);
+  }
+
   return (
     <div className={classes["chats-container"]}>
       <div className={classes.chats}>
@@ -61,24 +116,25 @@ function ChatsList() {
           <Search />
         </div>
         <div className={classes["chats-list"]}>
-          {chats.map((chat) => (
-            <div className={classes.chat}>
-              <ChatCard
-                key={chat.id}
-                chatData={chat}
-                onClick={activeChatHandler}
-                className={activeChat?.id === chat.id ? classes.active : null}
-              />
-            </div>
-          ))}
+          {content}
+          <Contacts
+            open={openContacts}
+            closeContactsList={closeContactsList}
+            onClickContact={activeChatHandler}
+          />
         </div>
+        <NewChatIcon
+          className={classes["new-chat"]}
+          onClick={openContactsList}
+        />
       </div>
       {activeChat ? (
         <Chat
           chatData={activeChat}
-          key={activeChat.id}
+          key={activeChat._id}
           onHideChat={hideChatHandler}
           className={`${showChat ? classes["show-chat"] : undefined}`}
+          isTyping={isTyping}
         />
       ) : (
         <p className={classes.select}>Select a chat to start conversation</p>

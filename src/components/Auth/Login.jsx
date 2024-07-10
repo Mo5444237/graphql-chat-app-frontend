@@ -1,12 +1,20 @@
-import { Link } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
 
 import Button from "../UI/Button";
 import Input from "../UI/Input";
 import useInput from "../hooks/use-input";
 
 import classes from "./Auth.module.css";
+import { useMutation } from "@apollo/client";
+import { LOGIN_MUTATION } from "../../services/auth";
+import { useDispatch } from "react-redux";
+import { userActions } from "../../store/user-slice";
+import Spinner from "../UI/Spinner";
+import { chatsActions } from "../../store/chats-slice";
+import socket from "../../services/socket";
 
 function Login() {
+
   const {
     value: emailValue,
     isValid: emailIsValid,
@@ -30,10 +38,39 @@ function Login() {
     formIsValid = true;
   }
 
+  const [login, { loading }] = useMutation(LOGIN_MUTATION);
+  const dispatch = useDispatch();
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    if (!formIsValid) {
+      return;
+    }
+    const userData = {
+      email: emailValue,
+      password: passwordValue,
+    };
+
+    try {
+      const { data } = await login({ variables: { userInput: userData } });
+      if (data.login) {
+        socket.emit("joinRoom", data.login.user._id);
+        dispatch(userActions.setUser(data.login.user));
+        localStorage.setItem("token", data.login.token);
+        dispatch(chatsActions.setChatsChanged(true));
+      }
+      redirect("/");
+    } catch (error) {
+      passwordReset();
+      console.log(error.graphQLErrors[0]);
+    }
+  };
+
   return (
     <div className={classes.container}>
       <div className={classes["container-form"]}>
-        <form action="">
+        <form method="POST" onSubmit={submitHandler}>
           <h1>Welcome back</h1>
           <Input
             className={classes.input}
@@ -44,6 +81,7 @@ function Login() {
               placeholder: "email",
               type: "email",
               value: emailValue,
+              autoComplete: "email",
               onChange: emailChangeHandler,
               onBlur: emailBlurHandler,
             }}
@@ -60,12 +98,19 @@ function Login() {
               placeholder: "password",
               type: "password",
               value: passwordValue,
+              autoComplete: "current-password",
               onChange: passwordChangeHandler,
               onBlur: passwordBlurHandler,
             }}
           />
           <div className={classes.actions}>
-            <Button disabled={!formIsValid} type="submit" title="Login" />
+            <Button
+              disabled={!formIsValid}
+              type="submit"
+              title={
+                loading ? <Spinner className={classes.spinner} /> : "login"
+              }
+            />
           </div>
           <div className={classes.options}>
             <p>

@@ -1,10 +1,12 @@
+import { useSelector } from "react-redux";
 import classes from "./Message.module.css";
 
-function Message({ messageData }) {
+function Message({ messageData, ...props }) {
+  const userId = useSelector(state => state.user.user._id);
   return (
     <div
-      className={`${classes.message} ${
-        messageData.sender === "me" ? classes.me : null
+      className={`${classes.message} ${props.className} ${
+        messageData.sender._id === userId ? classes.me : null
       }`}
     >
       <p>{messageData.content}</p>

@@ -5,6 +5,8 @@ import Modal from "../UI/Modal";
 import CancelIcon from "../UI/CancelIcon";
 import BlockIcon from "../UI/BlockIcon";
 
+import defaultImage from "../../assets/defaultImage.png";
+
 const images = [
   {
     id: 1,
@@ -34,7 +36,7 @@ function ChatInfo({ chatData, ...props }) {
         <CancelIcon className={classes.cancel} onClick={props.onHideChatInfo} />
       </div>
       <div className={classes.chat}>
-        <img src={chatData.avatar} alt="User" />
+        <img src={chatData.avatar || defaultImage} alt="User" />
         <h3>{chatData.name}</h3>
       </div>
       <div className={classes.media}>
@@ -46,7 +48,7 @@ function ChatInfo({ chatData, ...props }) {
         </div>
       </div>
       <div className={classes.actions}>
-        <div className={classes['block-action']}>
+        <div className={classes["block-action"]}>
           <BlockIcon className={classes.block} />
           <p>Block</p>
         </div>

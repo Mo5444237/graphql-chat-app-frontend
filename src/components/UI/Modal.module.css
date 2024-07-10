@@ -9,22 +9,19 @@
 }
 
 .modal {
-  position: fixed;
-  width: 90%;
   padding: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   z-index: 999;
   animation: slide-down 300ms ease-out forwards;
 }
 
-
 @keyframes slide-down {
   from {
     opacity: 0;
-    transform: translateX(3rem);
+    transform: translateY(-3rem);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
 }

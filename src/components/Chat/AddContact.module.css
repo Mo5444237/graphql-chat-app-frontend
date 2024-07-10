@@ -1,0 +1,52 @@
+.modal {
+  position: fixed;
+  top: 20vh;
+  left: calc(50% - 15rem);
+  transform: translateX(-50%);
+  width: 30rem;
+  background-color: var(--bgColor-dark-200);
+  border-radius: 8px;
+  padding: 2rem 1rem;
+}
+
+.modal .container {
+  width: 90%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.modal .container h2 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.modal .container form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+form .actions {
+  width: 100%;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+form .actions button {
+  width: 50%;
+}
+
+form .actions .loader {
+  background-color: var(--primary-color-muted);
+}
+
+@media (max-width: 768px) {
+  .modal {
+    position: absolute;
+    width: 90%;
+    left: 5%;
+  }
+}

@@ -1,12 +1,24 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import Button from "../UI/Button";
 import Input from "../UI/Input";
 import useInput from "../hooks/use-input";
 
 import classes from "./Auth.module.css";
+import { useMutation } from "@apollo/client";
+import { SIGNUP_MUTATION } from "../../services/auth";
 
 function Signup() {
+  const navigate = useNavigate();
+
+   const {
+     value: fullNameValue,
+     isValid: fullNameIsValid,
+     hasError: fullNameHasError,
+     valueBlurHandler: fullNameBlurHandler,
+     valueChangeHandler: fullNameChangeHandler,
+  } = useInput((value) => value.trim() !== "");
+  
   const {
     value: emailValue,
     isValid: emailIsValid,
@@ -35,15 +47,54 @@ function Signup() {
 
   let formIsValid = false;
 
-  if (emailIsValid && passwordIsValid && passwordConfirmationIsValid) {
+  if (fullNameIsValid && emailIsValid && passwordIsValid && passwordConfirmationIsValid) {
     formIsValid = true;
   }
+
+  const [signup] = useMutation(SIGNUP_MUTATION);
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    if (!formIsValid) {
+      return;
+    }
+
+    const userData = {
+      name: fullNameValue,
+      email: emailValue,
+      password: passwordValue,
+      passwordConfirmation: passwordConfirmationValue,
+    };
+
+    try {
+      const { data } = await signup({ variables: { userInput: userData } });
+      return navigate("/");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <div className={classes.container}>
       <div className={classes["container-form"]}>
-        <form action="">
+        <form method="POST" onSubmit={submitHandler}>
           <h1>Create Account</h1>
+          <Input
+            className={classes.input}
+            label="Full Name"
+            input={{
+              id: "name",
+              name: "name",
+              placeholder: "name",
+              type: "text",
+              value: fullNameValue,
+              onChange: fullNameChangeHandler,
+              onBlur: fullNameBlurHandler,
+            }}
+            hasError={fullNameHasError}
+            errorMsg={"Enter a valid name"}
+          />
           <Input
             className={classes.input}
             label="E-mail"

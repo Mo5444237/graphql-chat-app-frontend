@@ -28,7 +28,7 @@ const chatsSlice = createSlice({
       state.messages[chatId].push(...messages);
     },
     updateChatMessages: (state, action) => {
-      const { chatId, message } = action.payload;
+      const { chatId, message, currentUser, activeChat } = action.payload;
       if (!state.messages[chatId]) {
         state.messages[chatId] = [];
       }
@@ -36,8 +36,18 @@ const chatsSlice = createSlice({
       const chatIndex = state.chats.findIndex((chat) => chat._id === chatId);
       if (chatIndex !== -1) {
         state.chats[chatIndex].lastMessage = message;
+        if (message.sender._id !== currentUser && message.chatId !== activeChat) {
+          state.chats[chatIndex].unreadMessagesCount += 1;
+        }
         const updatedChat = state.chats.splice(chatIndex, 1)[0];
         state.chats.unshift(updatedChat);
+      }
+    },
+    markMessagesAsRead: (state, action) => {
+      const { chatId } = action.payload;
+      const chatIndex = state.chats.findIndex((chat) => chat._id === chatId);
+      if (chatIndex !== -1) {
+        state.chats[chatIndex].unreadMessagesCount = 0;
       }
     },
   },

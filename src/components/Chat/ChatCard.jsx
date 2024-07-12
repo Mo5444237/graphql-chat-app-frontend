@@ -22,7 +22,7 @@ function ChatCard({ chatData, isTyping, ...props }) {
           <p className={classes.typing}>Typing...</p>
         ) : (
           chatData.lastMessage && (
-            <p>
+            <p className={chatData?.unreadMessagesCount ? classes.unread : ''}>
               <span>
                 {chatData.lastMessage?.sender._id === userId
                   ? "You"
@@ -34,9 +34,9 @@ function ChatCard({ chatData, isTyping, ...props }) {
           )
         )}
       </div>
-      {chatData?.unreadMessages > 0 && (
+      {chatData?.unreadMessagesCount > 0 && (
         <div className={classes["unread-messages"]}>
-          {chatData.unreadMessages}
+          {chatData.unreadMessagesCount}
         </div>
       )}
     </div>

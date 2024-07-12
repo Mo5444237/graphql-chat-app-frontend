@@ -34,3 +34,19 @@ export const GET_USER_QUERY = gql`
     }
   }
 `
+
+export const REFRESH_TOKEN_QUERY = gql`
+  query User {
+    refreshToken {
+      user {
+        _id
+        name
+        email
+        avatar
+        online
+        lastSeen
+      }
+      token
+    }
+  }
+`;

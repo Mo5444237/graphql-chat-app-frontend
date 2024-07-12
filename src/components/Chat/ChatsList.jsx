@@ -11,14 +11,16 @@ import NewChatIcon from "../UI/NewChatIcon";
 import Contacts from "./Contacts";
 import { chatsActions } from "../../store/chats-slice";
 import socket from "../../services/socket";
+import { debounce } from "../../utils/debounce";
 
 function ChatsList() {
   const [activeChat, setActiveChat] = useState(null);
   const [showChat, setShowChat] = useState(false);
   const [openContacts, setOpenContacts] = useState(false);
-  const [isTyping, setIsTyping] = useState('');
+  const [isTyping, setIsTyping] = useState("");
 
   const chats = useSelector((state) => state.chats);
+  const currentUser = useSelector((state) => state.user.user?._id);
   const dispatch = useDispatch();
 
   const activeChatHandler = (chatData) => {
@@ -39,19 +41,9 @@ function ChatsList() {
     setOpenContacts(() => false);
   };
 
-  const debounce = (func, delay) => {
-    let timer;
-    return (...args) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        func(...args);
-      }, delay);
-    };
-  };
-
   // Debounce clear typing state after 2 seconds
   const clearTypingState = useCallback(
-    debounce(() => setIsTyping(''), 2000),
+    debounce(() => setIsTyping(""), 2000),
     []
   );
 
@@ -73,13 +65,15 @@ function ChatsList() {
         chatsActions.updateChatMessages({
           chatId: message.chatId,
           message: message,
+          currentUser,
+          activeChat: activeChat?._id,
         })
       );
     });
     return () => {
       socket.off("newMessage");
     };
-  }, [socket]);
+  }, [socket, currentUser, activeChat]);
 
   useEffect(() => {
     dispatch(fetchUserChats());

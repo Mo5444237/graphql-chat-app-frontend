@@ -54,6 +54,10 @@
     color: var(--primary-color-default);
 }
 
+.card .content p.unread {
+    color: var(--fgColor-default);
+}
+
 .card .unread-messages {
     position: absolute;
     display: flex;

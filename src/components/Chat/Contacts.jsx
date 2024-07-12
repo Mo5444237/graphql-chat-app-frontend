@@ -17,7 +17,7 @@ function Contacts({ open, ...props }) {
   const { loading, data, error } = useQuery(GET_CONTACTS_QUERY);
 
   const chats = useSelector((state) => state.chats.chats);
-  const userId = useSelector((state) => state.user.user._id);
+  const userId = useSelector((state) => state.user.user?._id);
 
   let content;
   if (loading) {
@@ -38,8 +38,8 @@ function Contacts({ open, ...props }) {
       ...contact,
       users: [{ _id: contact._id }, {_id: userId}],
     };
-    console.log(chat);
     props.onClickContact(chat);
+    props.closeContactsList();
   };
 
   if (data?.getContacts) {
@@ -57,7 +57,6 @@ function Contacts({ open, ...props }) {
   }
 
   const openModelHandler = () => {
-    console.log("clicked");
     setOpenModel(true);
   };
 

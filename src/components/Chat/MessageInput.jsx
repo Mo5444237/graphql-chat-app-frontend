@@ -7,7 +7,6 @@ import socket from "../../services/socket";
 function MessageInput({ chatId, users }) {
   const [message, setMessage] = useState("");
   const [sendMessage, { loading }] = useMutation(SEND_MESSAGE_MUTATION);
-  console.log(users);
   const typingHandler = (e) => {
     setMessage(e.target.value);
     users.forEach((user) =>

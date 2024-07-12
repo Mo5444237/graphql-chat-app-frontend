@@ -4,10 +4,13 @@ import ChatInfo from "./ChatInfo";
 import Message from "./Message";
 import MessageInput from "./MessageInput";
 import { useDispatch, useSelector } from "react-redux";
-import socket from "../../services/socket";
-import { fetchChatMessages } from "../../store/chats-actions";
+import {
+  fetchChatMessages,
+  markMessagesAsRead,
+} from "../../store/chats-actions";
 
 import defaultImage from "../../assets/defaultImage.png";
+import { debounce } from "../../utils/debounce";
 
 function Chat({ chatData, isTyping, ...props }) {
   const [showChatInfo, setShowChatInfo] = useState(false);
@@ -25,6 +28,13 @@ function Chat({ chatData, isTyping, ...props }) {
     setShowChatInfo(false);
   };
 
+  const debouncedMarkMessagesAsRead = useCallback(
+    debounce((chatId) => {
+      dispatch(markMessagesAsRead(chatId));
+    }, 300),
+    [dispatch]
+  );
+
   useEffect(() => {
     dispatch(fetchChatMessages(chatData._id));
   }, [dispatch, chatData._id]);
@@ -33,7 +43,9 @@ function Chat({ chatData, isTyping, ...props }) {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  });
+    console.log("Called");
+    debouncedMarkMessagesAsRead(chatData._id);
+  }, [messages, debouncedMarkMessagesAsRead]);
 
   return (
     <div className={`${classes.chat} ${props.className}`}>

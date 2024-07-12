@@ -23,6 +23,7 @@ export const GET_CHATS_QUERY = gql`
         avatar
         online
       }
+      unreadMessagesCount
       createdAt
       updatedAt
     }
@@ -106,5 +107,11 @@ export const SEND_MESSAGE_MUTATION = gql`
       createdAt
       updatedAt
     }
+  }
+`;
+
+export const MARK_MESSAGES_AS_SEEN_MUTATION = gql`
+  mutation MarkMessageAsSeen($chatId: ID!) {
+    markMessageAsSeen(chatId: $chatId)
   }
 `;

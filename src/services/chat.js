@@ -6,6 +6,7 @@ export const GET_CHATS_QUERY = gql`
       _id
       name
       type
+      avatar
       lastMessage {
         _id
         content
@@ -36,6 +37,7 @@ export const GET_CHAT_MESSAGES_QUERY = gql`
       _id
       chatId
       content
+      caption
       type
       sender {
         _id

@@ -2,13 +2,15 @@ import {
   ApolloClient,
   ApolloLink,
   InMemoryCache,
-  createHttpLink,
+  Observable,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { REFRESH_TOKEN_QUERY } from "./auth";
+import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
+import { redirect } from "react-router-dom";
 
-const httpLink = createHttpLink({
+const httpLink = createUploadLink({
   uri: "http://localhost:3000/graphql",
 });
 
@@ -34,6 +36,7 @@ const refreshToken = async (client) => {
         },
         fetchOptions: {
           credentials: "include",
+          fetchPolicy: "no-cache",
         },
       },
     });
@@ -53,7 +56,7 @@ const errorLink = onError(
       for (let err of graphQLErrors) {
         console.log(err.statusCode);
         if (err.statusCode === 401) {
-          return new Promise((resolve, reject) => {
+          return new Observable((observer) => {
             refreshToken(client)
               .then((newToken) => {
                 if (newToken) {
@@ -71,6 +74,8 @@ const errorLink = onError(
                   };
                   forward(operation).subscribe(subscriber);
                 } else {
+                  localStorage.removeItem('token');
+                  redirect('/login');
                   observer.error(err);
                 }
               })

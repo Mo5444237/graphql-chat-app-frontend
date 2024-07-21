@@ -9,20 +9,25 @@ import classes from "./Menu.module.css";
 import { redirect } from "react-router-dom";
 import { userActions } from "../../store/user-slice";
 
-function Menu() {
+function Menu(props) {
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
+
+  const openProfileHandler = () => {
+    props.openProfile();
+  }
 
   const logoutHandler = () => {
     localStorage.removeItem("token");
     dispatch(userActions.clearUser());
     redirect('/auth?mode=login');  
   };
+
   return (
     <BurgerMenu className={classes.menu}>
       <ul>
-        <li key={"profile"}>
-          <ProfileIcon />
+        <li key={"profile"} onClick={openProfileHandler}>
+          <ProfileIcon avatar={user?.avatar} />
           <p>{user?.name}</p>
         </li>
         <li key={"darkMode"}>

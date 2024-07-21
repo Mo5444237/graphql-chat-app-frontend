@@ -12,11 +12,13 @@ import Contacts from "./Contacts";
 import { chatsActions } from "../../store/chats-slice";
 import socket from "../../services/socket";
 import { debounce } from "../../utils/debounce";
+import Profile from "./Profile";
 
 function ChatsList() {
   const [activeChat, setActiveChat] = useState(null);
   const [showChat, setShowChat] = useState(false);
   const [openContacts, setOpenContacts] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
   const [isTyping, setIsTyping] = useState("");
 
   const chats = useSelector((state) => state.chats);
@@ -39,6 +41,14 @@ function ChatsList() {
 
   const closeContactsList = () => {
     setOpenContacts(() => false);
+  };
+
+  const openProfileList = () => {
+    setOpenProfile(() => true);
+  };
+
+  const closeProfileList = () => {
+    setOpenProfile(() => false);
   };
 
   // Debounce clear typing state after 2 seconds
@@ -106,7 +116,7 @@ function ChatsList() {
     <div className={classes["chats-container"]}>
       <div className={classes.chats}>
         <div className={classes.head}>
-          <Menu />
+          <Menu openProfile={openProfileList} />
           <Search />
         </div>
         <div className={classes["chats-list"]}>
@@ -116,6 +126,7 @@ function ChatsList() {
             closeContactsList={closeContactsList}
             onClickContact={activeChatHandler}
           />
+          <Profile open={openProfile} closeProfile={closeProfileList} />
         </div>
         <NewChatIcon
           className={classes["new-chat"]}

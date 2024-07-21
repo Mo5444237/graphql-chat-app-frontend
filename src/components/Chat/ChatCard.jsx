@@ -22,14 +22,16 @@ function ChatCard({ chatData, isTyping, ...props }) {
           <p className={classes.typing}>Typing...</p>
         ) : (
           chatData.lastMessage && (
-            <p className={chatData?.unreadMessagesCount ? classes.unread : ''}>
+            <p className={chatData?.unreadMessagesCount ? classes.unread : ""}>
               <span>
                 {chatData.lastMessage?.sender._id === userId
                   ? "You"
                   : chatData.lastMessage?.sender.name}
                 :{" "}
               </span>
-              {chatData.lastMessage?.content}
+              {chatData.lastMessage?.type == "image"
+                ? "sent an image"
+                : chatData.lastMessage?.content}
             </p>
           )
         )}

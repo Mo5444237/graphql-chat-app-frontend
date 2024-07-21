@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const LOGIN_MUTATION = gql`
   mutation Login($userInput: UserInputData!) {
@@ -33,7 +33,7 @@ export const GET_USER_QUERY = gql`
       lastSeen
     }
   }
-`
+`;
 
 export const REFRESH_TOKEN_QUERY = gql`
   query User {
@@ -47,6 +47,19 @@ export const REFRESH_TOKEN_QUERY = gql`
         lastSeen
       }
       token
+    }
+  }
+`;
+
+export const EDIT_PROFILE_MUTATION = gql`
+  mutation EditProfile($userInput: editProfileData!) {
+    editProfile(userInput: $userInput) {
+      _id
+      name
+      email
+      avatar
+      online
+      lastSeen
     }
   }
 `;

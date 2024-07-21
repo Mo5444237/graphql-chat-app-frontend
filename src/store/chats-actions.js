@@ -57,13 +57,12 @@ export const markMessagesAsRead = (chatId) => {
   return async (dispatch) => {
     try {
       dispatch(chatsActions.markMessagesAsRead({ chatId }));
-      const { data } = client.mutate({
+      const { data } = await client.mutate({
         mutation: MARK_MESSAGES_AS_SEEN_MUTATION,
         variables: {
           chatId: chatId,
         },
       });
-      console.log(data);
     } catch (error) {
       console.log(error);
     }

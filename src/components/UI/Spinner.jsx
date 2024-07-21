@@ -1,7 +1,7 @@
 import classes from "./Spinner.module.css";
 
 function Spinner(props) {
-  return <div className={`${classes.spinner} ${props.className}`}></div>;
+  return <div className={`${props.className} ${classes.spinner}`}></div>;
 }
 
 export default Spinner;

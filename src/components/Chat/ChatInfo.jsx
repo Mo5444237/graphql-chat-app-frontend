@@ -6,6 +6,7 @@ import CancelIcon from "../UI/CancelIcon";
 import BlockIcon from "../UI/BlockIcon";
 
 import defaultImage from "../../assets/defaultImage.png";
+import ImagePreview from "./ImagePreview";
 
 const images = [
   {
@@ -27,7 +28,7 @@ const images = [
 ];
 
 function ChatInfo({ chatData, ...props }) {
-  const [showContent, setShowContent] = useState("overview");
+  const [viewImage, setViewImage] = useState(false);
 
   return (
     <Modal className={classes.modal} onClose={props.onHideChatInfo}>
@@ -36,7 +37,17 @@ function ChatInfo({ chatData, ...props }) {
         <CancelIcon className={classes.cancel} onClick={props.onHideChatInfo} />
       </div>
       <div className={classes.chat}>
-        <img src={chatData.avatar || defaultImage} alt="User" />
+        {viewImage && (
+          <ImagePreview
+            img={chatData.avatar || defaultImage}
+            onHideModal={() => setViewImage(false)}
+          />
+        )}
+        <img
+          src={chatData.avatar || defaultImage}
+          alt="User"
+          onClick={() => setViewImage(true)}
+        />
         <h3>{chatData.name}</h3>
       </div>
       <div className={classes.media}>

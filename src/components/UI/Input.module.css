@@ -81,6 +81,7 @@ input:-webkit-autofill {
   color: #ff3333;
   font-size: 0.8rem;
   display: block;
+  text-align: left;
 }
 
 .actions {

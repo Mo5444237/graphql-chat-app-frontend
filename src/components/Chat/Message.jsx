@@ -3,8 +3,9 @@ import classes from "./Message.module.css";
 import { useState } from "react";
 import ImagePreview from "./ImagePreview";
 import { getTime } from "../../utils/getTime";
+import TimeIcon from "../UI/TimeIcon";
 
-function Message({ messageData, ...props }) {
+function Message({ messageData, unSent, ...props }) {
   const userId = useSelector((state) => state.user.user._id);
   const [viewImage, setViewImage] = useState();
   const time = getTime(messageData.createdAt);
@@ -38,6 +39,7 @@ function Message({ messageData, ...props }) {
       {content}
       <div className={classes.meta}>
         <span className={classes.time}>{time}</span>
+        {unSent && <TimeIcon className={classes.unSent} />}
       </div>
     </div>
   );

@@ -1,17 +1,26 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import classes from "./MessageInput.module.css";
 import { useMutation } from "@apollo/client";
 import { SEND_MESSAGE_MUTATION } from "../../services/chat";
 import socket from "../../services/socket";
 import ImageViewer from "./ImagePicker";
 import SendButton from "../UI/SendButton";
+import { useDispatch } from "react-redux";
+import { chatsActions } from "../../store/chats-slice";
 
 function MessageInput({ chatId, users }) {
   const [message, setMessage] = useState("");
   const [image, setImage] = useState();
-  const [previewURL, setPreviewURL] = useState("");
   const [openModal, setOpenModal] = useState();
-  const [sendMessage, { loading }] = useMutation(SEND_MESSAGE_MUTATION);
+  const dispatch = useDispatch();
+  const fileInputRef = useRef(null);
+
+  const [sendMessage, { loading }] = useMutation(SEND_MESSAGE_MUTATION, {
+    onCompleted: (data) => {
+      const message = data.sendMessage;
+      dispatch(chatsActions.updateUnsentMessages(message));
+    },
+  });
 
   const typingHandler = (e) => {
     setMessage(e.target.value);
@@ -24,18 +33,22 @@ function MessageInput({ chatId, users }) {
     e.preventDefault();
     if (!message) return;
     const userIds = users.map((user) => user._id);
+    const date = new Date().getTime().toString();
+
     const messageInput = {
       content: message,
       type: "text",
       chatId: chatId || "",
       users: userIds,
+      createdAt: date,
     };
 
+    dispatch(chatsActions.updateUnsentMessages(messageInput));
+    setMessage("");
     try {
       await sendMessage({
         variables: { messageInput: messageInput },
       });
-      setMessage("");
     } catch (error) {
       console.log(error);
     }
@@ -49,12 +62,17 @@ function MessageInput({ chatId, users }) {
     setOpenModal(true);
   };
 
+  const hideModalHandler = () => {
+    setOpenModal(false);
+    fileInputRef.current.value = "";
+  };
+
   return (
     <div className={classes.contianer}>
       {openModal && (
         <ImageViewer
           image={image}
-          onHideModel={() => setOpenModal(false)}
+          onHideModal={hideModalHandler}
           chatId={chatId}
           users={users}
         />
@@ -96,6 +114,7 @@ function MessageInput({ chatId, users }) {
               className={classes.file}
               name="file"
               onChange={fileUploadHandler}
+              ref={fileInputRef}
             />
           </div>
           <input
@@ -107,7 +126,7 @@ function MessageInput({ chatId, users }) {
             onInput={typingHandler}
             className={classes.messageInput}
           />
-          <SendButton className={classes.SendButton} disabled={loading} />
+          <SendButton className={classes.SendButton} />
         </div>
       </form>
     </div>

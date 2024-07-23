@@ -5,10 +5,13 @@ import SendButton from "../UI/SendButton";
 import { SEND_MESSAGE_MUTATION } from "../../services/chat";
 import { useMutation } from "@apollo/client";
 import Spinner from "../UI/Spinner";
+import { useDispatch } from "react-redux";
+import { chatsActions } from "../../store/chats-slice";
 
 function ImageViewer({ image, chatId, users, ...props }) {
   const [caption, setCaption] = useState("");
   const [previewURL, setPreviewURL] = useState("");
+  const dispatch = useDispatch();
 
   const captionChangeHandler = (e) => {
     setCaption(e.target.value);
@@ -23,9 +26,9 @@ function ImageViewer({ image, chatId, users, ...props }) {
   }
 
   const [sendMessage, { loading }] = useMutation(SEND_MESSAGE_MUTATION, {
-    onCompleted: () => {
-      props.onHideModel();
-      setCaption("");
+    onCompleted: (data) => {
+      const message = data.sendMessage;
+      dispatch(chatsActions.updateUnsentMessages(message));
     },
   });
 
@@ -33,6 +36,7 @@ function ImageViewer({ image, chatId, users, ...props }) {
     e.preventDefault();
     if (!image) return;
     const userIds = users.map((user) => user._id);
+    const createdAt = new Date().getTime().toString();
     const messageInput = {
       content: "",
       type: "image",
@@ -40,8 +44,17 @@ function ImageViewer({ image, chatId, users, ...props }) {
       image,
       chatId: chatId || "",
       users: userIds,
+      createdAt,
     };
 
+    dispatch(
+      chatsActions.updateUnsentMessages({
+        ...messageInput,
+        content: previewURL,
+      })
+    );
+    props.onHideModal();
+    setCaption("");
     try {
       await sendMessage({
         variables: { messageInput: messageInput },
@@ -58,7 +71,7 @@ function ImageViewer({ image, chatId, users, ...props }) {
   };
   return (
     <>
-      <div className={classes.overlay} onClick={props.onHideModel} />
+      <div className={classes.overlay} onClick={props.onHideModal} />
       <div className={classes["image-preview"]}>
         <form onSubmit={sendImageHandler}>
           <div className={classes.preview}>
@@ -77,8 +90,11 @@ function ImageViewer({ image, chatId, users, ...props }) {
             }}
             errorMsg="Enter a valid Caption"
           />
-          {loading ? <Spinner className={classes.loader} /> :
-            <SendButton className={classes.sendButton} disabled={loading} />}
+          {loading ? (
+            <Spinner className={classes.loader} />
+          ) : (
+            <SendButton className={classes.sendButton} disabled={loading} />
+          )}
         </form>
       </div>
     </>

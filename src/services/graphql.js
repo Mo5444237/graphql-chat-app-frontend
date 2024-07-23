@@ -12,6 +12,7 @@ import { redirect } from "react-router-dom";
 
 const httpLink = createUploadLink({
   uri: "http://localhost:3000/graphql",
+  credentials: 'include'
 });
 
 const authLink = setContext((_, { headers }) => {

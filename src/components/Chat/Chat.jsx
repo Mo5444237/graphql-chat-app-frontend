@@ -16,7 +16,9 @@ import BackIcon from "../UI/Backicon";
 function Chat({ chatData, isTyping, ...props }) {
   const [showChatInfo, setShowChatInfo] = useState(false);
 
+  const userId = useSelector((state) => state.user.user._id);
   const messages = useSelector((state) => state.chats.messages[chatData._id]);
+  const unSentMessages = useSelector((state) => state.chats.unSentMessages);
 
   const scrollRef = useRef();
   const dispatch = useDispatch();
@@ -59,7 +61,7 @@ function Chat({ chatData, isTyping, ...props }) {
       )}
       <div className={classes.header}>
         <div className={classes.back} onClick={props.onHideChat}>
-          <BackIcon/>
+          <BackIcon />
         </div>
         <div className={classes.info} onClick={showChatInfoHandler}>
           <div className={classes.avatar}>
@@ -79,6 +81,17 @@ function Chat({ chatData, isTyping, ...props }) {
         {messages &&
           messages.map((message) => {
             return <Message key={message._id} messageData={message} />;
+          })}
+        {unSentMessages &&
+          Object.entries(unSentMessages).map(([key, message]) => {
+            if (message.chatId === chatData._id)
+              return (
+                <Message
+                  key={message.createdAt}
+                  messageData={{ ...message, sender: { _id: userId } }}
+                  unSent="true"
+                />
+              );
           })}
       </div>
       <MessageInput chatId={chatData._id} users={chatData.users} />

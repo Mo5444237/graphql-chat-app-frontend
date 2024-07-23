@@ -1,6 +1,6 @@
 .message {
   background-color: var(--bgColor-dark-300);
-  padding: .5rem;
+  padding: 0.5rem;
   border-radius: 8px;
   width: 20rem;
   max-width: 80%;
@@ -17,9 +17,17 @@
 }
 
 .message .meta {
-  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.25rem;
   color: var(--fgColor-default);
   font-size: 0.75rem;
+}
+
+.message .meta svg {
+  width: 1rem;
+  height: 1rem;
 }
 
 .message .img img {

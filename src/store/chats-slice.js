@@ -5,6 +5,7 @@ const chatsInitialState = {
   isLoading: false,
   changed: false,
   messages: {},
+  unSentMessages: {},
 };
 
 const chatsSlice = createSlice({
@@ -36,7 +37,10 @@ const chatsSlice = createSlice({
       const chatIndex = state.chats.findIndex((chat) => chat._id === chatId);
       if (chatIndex !== -1) {
         state.chats[chatIndex].lastMessage = message;
-        if (message.sender._id !== currentUser && message.chatId !== activeChat) {
+        if (
+          message.sender._id !== currentUser &&
+          message.chatId !== activeChat
+        ) {
           state.chats[chatIndex].unreadMessagesCount += 1;
         }
         const updatedChat = state.chats.splice(chatIndex, 1)[0];
@@ -48,6 +52,15 @@ const chatsSlice = createSlice({
       const chatIndex = state.chats.findIndex((chat) => chat._id === chatId);
       if (chatIndex !== -1) {
         state.chats[chatIndex].unreadMessagesCount = 0;
+      }
+    },
+    updateUnsentMessages: (state, action) => {
+      const { createdAt } = action.payload;
+      if (state.unSentMessages[createdAt]) {
+        console.log("Deleted")
+        delete state.unSentMessages[createdAt];
+      } else {
+        state.unSentMessages[createdAt] = action.payload;
       }
     },
   },

@@ -5,27 +5,34 @@ import ImagePreview from "./ImagePreview";
 import { getTime } from "../../utils/getTime";
 import TimeIcon from "../UI/TimeIcon";
 
+function ImageMessage({ messageData }) {
+  const [viewImage, setViewImage] = useState();
+  return (
+    <div className={classes.img}>
+      {viewImage && (
+        <ImagePreview
+          onHideModal={() => setViewImage(false)}
+          img={messageData.content}
+        />
+      )}
+      <img
+        src={messageData.content}
+        alt="An-Image"
+        onClick={() => setViewImage(true)}
+      />
+      {messageData.caption && <p>{messageData.caption}</p>}
+    </div>
+  );
+}
+
 function Message({ messageData, unSent, ...props }) {
   const userId = useSelector((state) => state.user.user._id);
-  const [viewImage, setViewImage] = useState();
+  const contacts = useSelector((state) => state.contacts.contacts);
   const time = getTime(messageData.createdAt);
 
   let content =
     messageData.type == "image" ? (
-      <div className={classes.img}>
-        {viewImage && (
-          <ImagePreview
-            onHideModal={() => setViewImage(false)}
-            img={messageData.content}
-          />
-        )}
-        <img
-          src={messageData.content}
-          alt="An-Image"
-          onClick={() => setViewImage(true)}
-        />
-        {messageData.caption && <p>{messageData.caption}</p>}
-      </div>
+      <ImageMessage messageData={messageData} />
     ) : (
       <p>{messageData.content}</p>
     );
@@ -34,8 +41,13 @@ function Message({ messageData, unSent, ...props }) {
     <div
       className={`${classes.message} ${props.className} ${
         messageData.sender._id === userId ? classes.me : null
-      }`}
+      } ${messageData.type === "event" ? classes.event : null}`}
     >
+      {props.chatType === "group" && messageData.sender._id !== userId && (
+        <p className={classes.name}>
+          {contacts[messageData.sender._id]?.name || messageData.sender.name}
+        </p>
+      )}
       {content}
       <div className={classes.meta}>
         <span className={classes.time}>{time}</span>

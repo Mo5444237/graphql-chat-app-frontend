@@ -5,28 +5,27 @@ import Modal from "../UI/Modal";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { EDIT_PROFILE_MUTATION } from "../../services/auth";
-import { userActions } from "../../store/user-slice";
 import NewChatIcon from "../UI/NewChatIcon";
 import Button from "../UI/Button";
 import Spinner from "../UI/Spinner";
 import useInput from "../hooks/use-input";
 import Input from "../UI/Input";
+import { EDIT_CHAT_MUTATION } from "../../services/chat";
 
-function EditProfile({ user, ...props }) {
+function EditGroup({ chat, ...props }) {
   const {
-    value: nameValue,
-    isValid: nameIsValid,
-    hasError: nameHasError,
-    valueBlurHandler: nameBlurHandler,
-    valueChangeHandler: nameChangeHandler,
+    value: groupNameValue,
+    isValid: groupNameIsValid,
+    hasError: groupNameHasError,
+    valueBlurHandler: groupNameBlurHandler,
+    valueChangeHandler: groupNameChangeHandler,
   } = useInput((value) => value.length !== 0);
 
   const [avatar, setAvatar] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const dispatch = useDispatch();
 
-  const [editProfile, { loading }] = useMutation(EDIT_PROFILE_MUTATION, {
+  const [editGroup, { loading }] = useMutation(EDIT_CHAT_MUTATION, {
     onCompleted: () => {
       props.onHideModal();
     },
@@ -47,24 +46,25 @@ function EditProfile({ user, ...props }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (nameHasError) return;
+    if (groupNameHasError) return;
     try {
-      const { data } = await editProfile({
+      const { data } = await editGroup({
         variables: {
-          userInput: {
-            name: nameValue || user?.name,
+          chatInput: {
+            chatId: chat._id,
+            name: groupNameValue || chat?.name,
             avatar,
           },
         },
         context: {
           headers: {
-            "x-apollo-operation-name": "EditProfile",
+            "x-apollo-operation-name": "EditGroup",
             "apollo-require-preflight": true,
           },
         },
       });
 
-      dispatch(userActions.setUser(data.editProfile));
+      //   dispatch(userActions.setUser(data.editProfile));
     } catch (error) {
       console.error("Error updating user:", error);
     }
@@ -73,7 +73,7 @@ function EditProfile({ user, ...props }) {
   return (
     <Modal onClose={props.onHideModal} className={classes.modal}>
       <div className={classes.container}>
-        <h2>Edit profile</h2>
+        <h2>Edit Group</h2>
         <form onSubmit={handleSubmit}>
           <div className={classes.avatar}>
             <div className={classes.img}>
@@ -91,17 +91,17 @@ function EditProfile({ user, ...props }) {
             </div>
             <Input
               className={classes.input}
-              label="Name"
+              label="Group Name"
               input={{
                 id: "name",
                 name: "name",
-                placeholder: "name",
+                placeholder: "Group Name",
                 type: "text",
-                value: nameValue || user?.name,
-                onChange: nameChangeHandler,
-                onBlur: nameBlurHandler,
+                value: groupNameValue || chat?.name,
+                onChange: groupNameChangeHandler,
+                onBlur: groupNameBlurHandler,
               }}
-              hasError={nameHasError}
+              hasError={groupNameHasError}
               errorMsg="Enter a valid Name"
             />
             <div className={classes.actions}>
@@ -118,4 +118,4 @@ function EditProfile({ user, ...props }) {
   );
 }
 
-export default EditProfile;
+export default EditGroup;

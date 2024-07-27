@@ -13,12 +13,13 @@ import defaultImage from "../../assets/defaultImage.png";
 import { debounce } from "../../utils/debounce";
 import BackIcon from "../UI/Backicon";
 
-function Chat({ chatData, isTyping, ...props }) {
+function Chat({ chatData, isTyping, typingUser, ...props }) {
   const [showChatInfo, setShowChatInfo] = useState(false);
 
   const userId = useSelector((state) => state.user.user._id);
   const messages = useSelector((state) => state.chats.messages[chatData._id]);
   const unSentMessages = useSelector((state) => state.chats.unSentMessages);
+  const contacts = useSelector((state) => state.contacts.contacts);
 
   const scrollRef = useRef();
   const dispatch = useDispatch();
@@ -70,7 +71,14 @@ function Chat({ chatData, isTyping, ...props }) {
           <div className={classes.content}>
             <h3>{chatData.name}</h3>
             {isTyping ? (
-              <p className={classes.typing}>Typing...</p>
+              <p className={classes.typing}>
+                {chatData.type === "group"
+                  ? `${
+                      contacts[typingUser._id]?.name || typingUser.name
+                    } ${" "}`
+                  : ""}
+                typing...
+              </p>
             ) : (
               <p>{chatData?.lastSeen}</p>
             )}
@@ -80,7 +88,13 @@ function Chat({ chatData, isTyping, ...props }) {
       <div className={classes.body} ref={scrollRef}>
         {messages &&
           messages.map((message) => {
-            return <Message key={message._id} messageData={message} />;
+            return (
+              <Message
+                key={message._id}
+                messageData={message}
+                chatType={chatData.type}
+              />
+            );
           })}
         {unSentMessages &&
           Object.entries(unSentMessages).map(([key, message]) => {

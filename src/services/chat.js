@@ -18,6 +18,7 @@ export const GET_CHATS_QUERY = gql`
         createdAt
         updatedAt
       }
+      admin
       users {
         _id
         name
@@ -84,6 +85,44 @@ export const CREATE_CHAT_MUTATION = gql`
         online
         lastSeen
       }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const EDIT_CHAT_MUTATION = gql`
+  mutation EditChat($chatInput: EditChatInputData!) {
+    editChat(chatInput: $chatInput) {
+      _id
+      name
+      type
+      lastMessage {
+        _id
+        chatId
+        content
+        caption
+        type
+        sender {
+          _id
+          name
+          avatar
+        }
+        readBy {
+          _id
+          name
+          avatar
+        }
+        createdAt
+        updatedAt
+      }
+      unreadMessagesCount
+      users {
+        _id
+        name
+        avatar
+      }
+      avatar
       createdAt
       updatedAt
     }

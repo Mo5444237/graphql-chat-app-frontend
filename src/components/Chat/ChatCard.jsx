@@ -2,8 +2,9 @@ import { useSelector } from "react-redux";
 import classes from "./ChatCard.module.css";
 import defaultImage from "../../assets/defaultImage.png";
 
-function ChatCard({ chatData, isTyping, ...props }) {
+function ChatCard({ chatData, isTyping, typingUser, ...props }) {
   const userId = useSelector((state) => state.user.user._id);
+  const contacts = useSelector((state) => state.contacts.contacts);
 
   const activeChatHandler = () => {
     props.onClick(chatData);
@@ -19,7 +20,12 @@ function ChatCard({ chatData, isTyping, ...props }) {
       <div className={classes.content}>
         <h3>{chatData.name}</h3>
         {isTyping && isTyping == chatData._id ? (
-          <p className={classes.typing}>Typing...</p>
+          <p className={classes.typing}>
+            {chatData.type === "group"
+              ? `${contacts[typingUser._id]?.name || typingUser.name} ${" "}`
+              : ""}
+            typing...
+          </p>
         ) : (
           chatData.lastMessage && (
             <p className={chatData?.unreadMessagesCount ? classes.unread : ""}>

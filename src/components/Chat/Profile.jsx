@@ -9,14 +9,14 @@ import EditProfile from "./EditProfile";
 
 function Profile({ open, ...props }) {
   const user = useSelector((state) => state.user.user);
-  const [openModel, setOpenModel] = useState();
+  const [openModal, setOpenModal] = useState();
 
-  const openModelHandler = () => {
-    setOpenModel(true);
+  const openModalHandler = () => {
+    setOpenModal(true);
   };
 
-  const closeModelHandler = () => {
-    setOpenModel(false);
+  const closeModalHandler = () => {
+    setOpenModal(false);
   };
 
   return (
@@ -26,8 +26,8 @@ function Profile({ open, ...props }) {
         <p>Profile</p>
       </div>
       <div className={classes.content}>
-        <NewChatIcon className={classes.edit} onClick={openModelHandler} />
-        {openModel && <EditProfile onHideModel={closeModelHandler} user={user}/>}
+        <NewChatIcon className={classes.edit} onClick={openModalHandler} />
+        {openModal && <EditProfile onHideModal={closeModalHandler} user={user}/>}
         <div className={classes.avatar}>
           <div className={classes.img}>
             <img src={user?.avatar || defaultImage} alt="User-image" />

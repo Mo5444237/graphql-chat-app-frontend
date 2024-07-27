@@ -7,6 +7,9 @@ import BlockIcon from "../UI/BlockIcon";
 
 import defaultImage from "../../assets/defaultImage.png";
 import ImagePreview from "./ImagePreview";
+import EditGroup from "./EditGroup";
+import NewChatIcon from "../UI/NewChatIcon";
+import { useSelector } from "react-redux";
 
 const images = [
   {
@@ -29,6 +32,16 @@ const images = [
 
 function ChatInfo({ chatData, ...props }) {
   const [viewImage, setViewImage] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const userId = useSelector((state) => state.user.user._id);
+
+  const openEditModalHandler = () => {
+    setOpenEditModal(true);
+  };
+
+  const closeEditModalHandler = () => {
+    setOpenEditModal(false);
+  };
 
   return (
     <Modal className={classes.modal} onClose={props.onHideChatInfo}>
@@ -37,6 +50,13 @@ function ChatInfo({ chatData, ...props }) {
         <CancelIcon className={classes.cancel} onClick={props.onHideChatInfo} />
       </div>
       <div className={classes.chat}>
+        {chatData?.admin === userId && (
+          <NewChatIcon
+            className={classes.edit}
+            onClick={openEditModalHandler}
+          />
+        )}
+        {openEditModal && <EditGroup onHideModal={closeEditModalHandler} chat={chatData}/>}
         {viewImage && (
           <ImagePreview
             img={chatData.avatar || defaultImage}

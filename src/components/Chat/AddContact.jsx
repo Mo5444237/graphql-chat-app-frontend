@@ -28,11 +28,12 @@ function AddContact(props) {
       return;
     }
     addContact({
-      variables: { email: emailValue },
+      variables: { contactInput: { email: emailValue } },
       onCompleted: () => {
         props.onHideModel();
         client.refetchQueries({
           include: [GET_CONTACTS_QUERY],
+          
         });
       },
     });

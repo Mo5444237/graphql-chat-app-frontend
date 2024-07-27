@@ -57,7 +57,6 @@ const chatsSlice = createSlice({
     updateUnsentMessages: (state, action) => {
       const { createdAt } = action.payload;
       if (state.unSentMessages[createdAt]) {
-        console.log("Deleted")
         delete state.unSentMessages[createdAt];
       } else {
         state.unSentMessages[createdAt] = action.payload;

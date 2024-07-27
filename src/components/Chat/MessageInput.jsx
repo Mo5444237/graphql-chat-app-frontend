@@ -5,13 +5,15 @@ import { SEND_MESSAGE_MUTATION } from "../../services/chat";
 import socket from "../../services/socket";
 import ImageViewer from "./ImagePicker";
 import SendButton from "../UI/SendButton";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { chatsActions } from "../../store/chats-slice";
 
 function MessageInput({ chatId, users }) {
   const [message, setMessage] = useState("");
   const [image, setImage] = useState();
   const [openModal, setOpenModal] = useState();
+  const currentUser = useSelector((state) => state.user.user);
+
   const dispatch = useDispatch();
   const fileInputRef = useRef(null);
 
@@ -25,7 +27,11 @@ function MessageInput({ chatId, users }) {
   const typingHandler = (e) => {
     setMessage(e.target.value);
     users.forEach((user) =>
-      socket.emit("typing", { chatId, userId: user._id || user })
+      socket.emit("typing", {
+        chatId,
+        userId: user._id,
+        user: { _id: currentUser._id, name: currentUser.name },
+      })
     );
   };
 

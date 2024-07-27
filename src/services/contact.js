@@ -11,8 +11,8 @@ export const GET_CONTACTS_QUERY = gql`
 `;
 
 export const ADD_CONTACT_MUTATION = gql`
-  mutation AddContact($email: String!) {
-    addContact(email: $email)
+  mutation AddContact($contactInput: contactInputData!) {
+    addContact(contactInput: $contactInput)
   }
 `;
 

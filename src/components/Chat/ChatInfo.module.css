@@ -39,9 +39,20 @@
 }
 
 .modal .chat {
+  position: relative;
   width: 100%;
   text-align: center;
   margin-bottom: 2rem;
+}
+
+.modal .chat .edit {
+  position: absolute;
+  right: 1rem;
+  top: 0;
+}
+
+.modal .chat .edit path {
+  stroke: none;
 }
 
 .modal .chat img {

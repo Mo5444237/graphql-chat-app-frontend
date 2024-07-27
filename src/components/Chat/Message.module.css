@@ -9,11 +9,35 @@
 
 .message p {
   margin: 0;
+  word-break: break-word;
+}
+
+.message .name {
+  color: var(--primary-color-default);
 }
 
 .message.me {
   background-color: var(--primary-color-default);
   align-self: flex-end;
+}
+
+.message.event {
+  align-self: center;
+  text-align: center;
+  background-color: transparent;
+  border-radius: 16px;
+  width: 100%;
+}
+
+.message.event p {
+  font-size: 0.8rem;
+  color: var(--primary-color-muted);
+  font-weight: 500;
+}
+
+.message.event .meta,
+.message.event .name {
+  display: none;
 }
 
 .message .meta {

@@ -29,9 +29,6 @@
   align-items: center;
 }
 
-.contacts .head svg {
-}
-
 .contacts .body {
   display: flex;
   flex-direction: column;

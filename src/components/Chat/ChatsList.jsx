@@ -20,6 +20,7 @@ function ChatsList() {
   const [openContacts, setOpenContacts] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
   const [isTyping, setIsTyping] = useState("");
+  const [typingUser, setTypingUser] = useState("");
 
   const chats = useSelector((state) => state.chats);
   const currentUser = useSelector((state) => state.user.user?._id);
@@ -58,8 +59,9 @@ function ChatsList() {
   );
 
   useEffect(() => {
-    const handleTyping = ({ chatId, userId }) => {
+    const handleTyping = ({ chatId, userId, user }) => {
       setIsTyping(chatId);
+      setTypingUser(user);
       clearTypingState();
     };
     socket.on("typing", handleTyping);
@@ -91,17 +93,31 @@ function ChatsList() {
 
   let content;
 
+  const contacts = useSelector((state) => state.contacts.contacts);
   if (chats.chats) {
-    content = chats.chats.map((chat) => (
-      <div className={classes.chat} key={chat._id}>
-        <ChatCard
-          chatData={chat}
-          onClick={activeChatHandler}
-          className={activeChat?._id === chat._id ? classes.active : null}
-          isTyping={isTyping}
-        />
-      </div>
-    ));
+    content = chats.chats.map((chat) => {
+      let chatData = chat;
+      // get contact name
+      const contactId =
+        chat.type === "private"
+          ? chat.users.filter((user) => user._id !== currentUser)[0]._id
+          : null;
+      if (contacts[contactId]) {
+        chatData = {...chatData, name: contacts[contactId].name}
+      }
+          
+      return (
+        <div className={classes.chat} key={chat._id}>
+          <ChatCard
+            chatData={chatData}
+            onClick={activeChatHandler}
+            className={activeChat?._id === chat._id ? classes.active : null}
+            isTyping={isTyping}
+            typingUser={typingUser}
+          />
+        </div>
+      );
+    });
   }
 
   if (chats.isLoading) {
@@ -140,6 +156,7 @@ function ChatsList() {
           onHideChat={hideChatHandler}
           className={`${showChat ? classes["show-chat"] : undefined}`}
           isTyping={isTyping}
+          typingUser={typingUser}
         />
       ) : (
         <p className={classes.select}>Select a chat to start conversation</p>

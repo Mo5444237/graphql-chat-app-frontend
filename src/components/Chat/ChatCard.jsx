@@ -4,11 +4,21 @@ import defaultImage from "../../assets/defaultImage.png";
 
 function ChatCard({ chatData, isTyping, typingUser, ...props }) {
   const userId = useSelector((state) => state.user.user._id);
+  const blockedUsers = useSelector((state) => state.user.user.blockedUsers);
   const contacts = useSelector((state) => state.contacts.contacts);
+
+  const receiver =
+    chatData.type === "private" &&
+    chatData.users.find((user) => user._id !== userId);
+  const isBlocked = blockedUsers.find((user) => user._id === receiver._id);
+  const lastMessage = isBlocked
+    ? "You Blocked This Contact"
+    : chatData.lastMessage;
 
   const activeChatHandler = () => {
     props.onClick(chatData);
   };
+
   return (
     <div
       className={`${classes.card} ${props.className}`}
@@ -19,7 +29,7 @@ function ChatCard({ chatData, isTyping, typingUser, ...props }) {
       </div>
       <div className={classes.content}>
         <h3>{chatData.name}</h3>
-        {isTyping && isTyping == chatData._id ? (
+        {isTyping && isTyping == chatData._id && !isBlocked ? (
           <p className={classes.typing}>
             {chatData.type === "group"
               ? `${contacts[typingUser._id]?.name || typingUser.name} ${" "}`
@@ -30,14 +40,13 @@ function ChatCard({ chatData, isTyping, typingUser, ...props }) {
           chatData.lastMessage && (
             <p className={chatData?.unreadMessagesCount ? classes.unread : ""}>
               <span>
-                {chatData.lastMessage?.sender._id === userId
-                  ? "You"
-                  : chatData.lastMessage?.sender.name}
-                :{" "}
+                {chatData.lastMessage?.sender._id === userId || isBlocked
+                  ? ""
+                  : `${chatData.lastMessage?.sender.name}: `}
               </span>
-              {chatData.lastMessage?.type == "image"
+              {lastMessage?.type == "image"
                 ? "sent an image"
-                : chatData.lastMessage?.content}
+                : lastMessage?.content || lastMessage}
             </p>
           )
         )}

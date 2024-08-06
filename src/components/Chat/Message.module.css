@@ -1,10 +1,11 @@
 .message {
   background-color: var(--bgColor-dark-300);
-  padding: 0.5rem;
-  border-radius: 8px;
+  padding: 0.5rem .75rem;
+  border-radius: 1rem;
   width: 20rem;
   max-width: 80%;
   text-wrap: wrap;
+  animation: messageSliding .1s linear forwards;
 }
 
 .message p {
@@ -19,6 +20,7 @@
 .message.me {
   background-color: var(--primary-color-default);
   align-self: flex-end;
+  animation: none;
 }
 
 .message.event {
@@ -40,6 +42,17 @@
   display: none;
 }
 
+.message.image {
+  position: relative;
+  padding: .5rem;
+}
+
+.message.image .name {
+  position: absolute;
+  left: 5%;
+  font-weight: 500;
+}
+
 .message .meta {
   display: flex;
   align-items: center;
@@ -56,6 +69,20 @@
 
 .message .img img {
   width: 100%;
+  border-radius: 0.5rem;
   object-fit: contain;
   cursor: pointer;
+}
+
+
+@keyframes messageSliding {
+  from {
+    opacity: 0;
+    transform: translateX(-1rem);
+  }
+  
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }

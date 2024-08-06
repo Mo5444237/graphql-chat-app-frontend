@@ -41,7 +41,8 @@ function Message({ messageData, unSent, ...props }) {
     <div
       className={`${classes.message} ${props.className} ${
         messageData.sender._id === userId ? classes.me : null
-      } ${messageData.type === "event" ? classes.event : null}`}
+      } ${messageData.type === "event" ? classes.event : null} 
+      ${messageData.type === "image" ? classes.image : null}`}
     >
       {props.chatType === "group" && messageData.sender._id !== userId && (
         <p className={classes.name}>

@@ -116,7 +116,6 @@ export const EDIT_CHAT_MUTATION = gql`
         createdAt
         updatedAt
       }
-      unreadMessagesCount
       users {
         _id
         name
@@ -126,6 +125,18 @@ export const EDIT_CHAT_MUTATION = gql`
       createdAt
       updatedAt
     }
+  }
+`;
+
+export const ADD_USERS_TO_CHAT = gql`
+  mutation AddUsersToChat($chatInput: AddUsersInputData!) {
+    addUsersToChat(chatInput: $chatInput)
+  }
+`;
+
+export const DELETE_USER_FROM_CHAT = gql`
+  mutation DeleteUserFromChat($chatInput: EditChatUsersInputData!) {
+    deleteUserFromChat(chatInput: $chatInput)
   }
 `;
 

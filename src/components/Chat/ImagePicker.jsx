@@ -81,6 +81,8 @@ function ImageViewer({ image, chatId, users, ...props }) {
             className={classes.input}
             label="caption"
             input={{
+              autoFocus: "autoFocus",
+              autoComplete: "off",
               id: "caption",
               name: "caption",
               placeholder: "caption",

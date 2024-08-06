@@ -9,14 +9,9 @@ import { chatsActions } from "./chats-slice";
 export const fetchUserChats = () => {
   return async (dispatch) => {
     try {
-      dispatch(chatsActions.setIsLoading(true));
       const { data } = await client.query({
         query: GET_CHATS_QUERY,
-        context: {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        },
+        fetchPolicy: "network-only",
       });
       dispatch(chatsActions.setChats(data.getUserChats));
     } catch (error) {
@@ -32,11 +27,6 @@ export const fetchChatMessages = (chatId) => {
         query: GET_CHAT_MESSAGES_QUERY,
         variables: {
           chatId: chatId,
-        },
-        context: {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
         },
         fetchPolicy: "network-only",
       });

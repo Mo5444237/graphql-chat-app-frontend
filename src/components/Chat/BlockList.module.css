@@ -1,0 +1,93 @@
+.blocks {
+  position: fixed;
+  left: -100%;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  width: 33vw;
+  height: 100%;
+  --chats-min-width: 15rem;
+  --chats-max-width: 26rem;
+  min-width: var(--chats-min-width);
+  max-width: var(--chats-max-width);
+  gap: 0.5rem;
+  padding: 1rem 0.5rem;
+  transition: all 0.3s ease-in-out;
+  z-index: 100;
+  background-color: var(--bgColor-dark-200);
+}
+
+.blocks.open {
+  left: 0;
+}
+
+.blocks .head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.blocks .head svg {
+  width: 1.5rem;
+  fill: var(--fgColor-default);
+}
+
+.blocks .head svg path {
+  stroke: var(--fgColor-default);
+}
+
+.blocks .head p {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.blocks .center  {
+  text-align: center;
+  font-weight: 500;
+}
+
+.blocks .content {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.blocks .content .user {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 500;
+}
+
+.blocks .content .user p {
+  margin: 0;
+}
+
+.blocks .content .user .unblock {
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all .3s ease-out;
+  background: transparent;
+  color: var(--primary-color-muted);
+}
+
+.blocks .content .user .unblock:hover {
+  color: var(--primary-color-default);
+}
+
+@media (min-width: 992px) {
+  .blocks {
+    --chats-max-width: 40vw;
+  }
+}
+
+@media (max-width: 991px) {
+  .blocks {
+    max-width: none;
+    width: 100vw !important;
+  }
+}

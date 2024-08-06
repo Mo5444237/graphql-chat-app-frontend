@@ -16,10 +16,17 @@ import BackIcon from "../UI/Backicon";
 function Chat({ chatData, isTyping, typingUser, ...props }) {
   const [showChatInfo, setShowChatInfo] = useState(false);
 
-  const userId = useSelector((state) => state.user.user._id);
+  const currentUser = useSelector((state) => state.user.user);
   const messages = useSelector((state) => state.chats.messages[chatData._id]);
   const unSentMessages = useSelector((state) => state.chats.unSentMessages);
   const contacts = useSelector((state) => state.contacts.contacts);
+
+  const chatUser =
+    chatData.type === "private" &&
+    chatData.users.find((user) => user._id !== currentUser._id);
+  const isBlocked =
+    chatUser &&
+    currentUser.blockedUsers.find((user) => user._id === chatUser._id);
 
   const scrollRef = useRef();
   const dispatch = useDispatch();
@@ -47,7 +54,6 @@ function Chat({ chatData, isTyping, typingUser, ...props }) {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-    console.log("Called");
     debouncedMarkMessagesAsRead(chatData._id);
   }, [messages, debouncedMarkMessagesAsRead]);
 
@@ -70,7 +76,7 @@ function Chat({ chatData, isTyping, typingUser, ...props }) {
           </div>
           <div className={classes.content}>
             <h3>{chatData.name}</h3>
-            {isTyping ? (
+            {isTyping && !isBlocked ? (
               <p className={classes.typing}>
                 {chatData.type === "group"
                   ? `${
@@ -102,13 +108,13 @@ function Chat({ chatData, isTyping, typingUser, ...props }) {
               return (
                 <Message
                   key={message.createdAt}
-                  messageData={{ ...message, sender: { _id: userId } }}
+                  messageData={{ ...message, sender: { _id: currentUser._id } }}
                   unSent="true"
                 />
               );
           })}
       </div>
-      <MessageInput chatId={chatData._id} users={chatData.users} />
+      <MessageInput chatData={chatData} isBlocked={isBlocked} />
     </div>
   );
 }

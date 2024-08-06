@@ -13,6 +13,14 @@ import Spinner from "../UI/Spinner";
 
 function AddContact(props) {
   const {
+    value: fullNameValue,
+    isValid: fullNameIsValid,
+    hasError: fullNameHasError,
+    valueBlurHandler: fullNameBlurHandler,
+    valueChangeHandler: fullNameChangeHandler,
+  } = useInput((value) => value.trim() !== "");
+
+  const {
     value: emailValue,
     isValid: emailIsValid,
     hasError: emailHasError,
@@ -24,16 +32,15 @@ function AddContact(props) {
 
   const addContactHandler = (e) => {
     e.preventDefault();
-    if (!emailIsValid) {
+    if (!emailIsValid || !fullNameIsValid) {
       return;
     }
     addContact({
-      variables: { contactInput: { email: emailValue } },
+      variables: { contactInput: { email: emailValue, name: fullNameValue } },
       onCompleted: () => {
         props.onHideModel();
         client.refetchQueries({
           include: [GET_CONTACTS_QUERY],
-          
         });
       },
     });
@@ -58,6 +65,21 @@ function AddContact(props) {
             }}
             hasError={emailHasError}
             errorMsg="Enter a valid E-mail"
+          />
+          <Input
+            className={classes.input}
+            label="Name"
+            input={{
+              id: "name",
+              name: "name",
+              placeholder: "name",
+              type: "text",
+              value: fullNameValue,
+              onChange: fullNameChangeHandler,
+              onBlur: fullNameBlurHandler,
+            }}
+            hasError={fullNameHasError}
+            errorMsg="Enter a valid Name"
           />
           <div className={classes.actions}>
             {loading ? (

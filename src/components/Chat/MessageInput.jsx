@@ -8,7 +8,7 @@ import SendButton from "../UI/SendButton";
 import { useDispatch, useSelector } from "react-redux";
 import { chatsActions } from "../../store/chats-slice";
 
-function MessageInput({ chatId, users }) {
+function MessageInput({ chatData, isBlocked }) {
   const [message, setMessage] = useState("");
   const [image, setImage] = useState();
   const [openModal, setOpenModal] = useState();
@@ -26,9 +26,11 @@ function MessageInput({ chatId, users }) {
 
   const typingHandler = (e) => {
     setMessage(e.target.value);
-    users.forEach((user) =>
+
+    if (isBlocked) return;
+    chatData.users.forEach((user) =>
       socket.emit("typing", {
-        chatId,
+        chatId: chatData._id,
         userId: user._id,
         user: { _id: currentUser._id, name: currentUser.name },
       })
@@ -38,13 +40,13 @@ function MessageInput({ chatId, users }) {
   const sendMessageHandler = async (e) => {
     e.preventDefault();
     if (!message) return;
-    const userIds = users.map((user) => user._id);
+    const userIds = chatData.users.map((user) => user._id);
     const date = new Date().getTime().toString();
 
     const messageInput = {
       content: message,
       type: "text",
-      chatId: chatId || "",
+      chatId: chatData._id || "",
       users: userIds,
       createdAt: date,
     };
@@ -79,8 +81,8 @@ function MessageInput({ chatId, users }) {
         <ImageViewer
           image={image}
           onHideModal={hideModalHandler}
-          chatId={chatId}
-          users={users}
+          chatId={chatData._id}
+          users={chatData.users}
         />
       )}
       <form onSubmit={sendMessageHandler}>
@@ -124,7 +126,8 @@ function MessageInput({ chatId, users }) {
             />
           </div>
           <input
-            required=""
+            autoFocus
+            autoComplete="off"
             placeholder="Message..."
             type="text"
             id="messageInput"

@@ -23,10 +23,9 @@ function EditGroup({ chat, ...props }) {
 
   const [avatar, setAvatar] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
-  const dispatch = useDispatch();
 
   const [editGroup, { loading }] = useMutation(EDIT_CHAT_MUTATION, {
-    onCompleted: () => {
+    onCompleted: (data) => {
       props.onHideModal();
     },
   });

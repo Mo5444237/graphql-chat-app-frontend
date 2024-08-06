@@ -23,7 +23,10 @@ const userSlice = createSlice({
         },
         setError(state, action) {
             state.error = action.payload;
-         }
+        },
+        setBlockList(state, action) {
+            state.user.blockedUsers = action.payload;
+        }
     },
 });
 

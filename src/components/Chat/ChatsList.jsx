@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ChatCard from "./ChatCard";
 import classes from "./ChatsList.module.css";
 import Chat from "./Chat";
@@ -19,8 +19,6 @@ function ChatsList() {
   const [showChat, setShowChat] = useState(false);
   const [openContacts, setOpenContacts] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
-  const [isTyping, setIsTyping] = useState("");
-  const [typingUser, setTypingUser] = useState("");
 
   const chats = useSelector((state) => state.chats);
   const currentUser = useSelector((state) => state.user.user?._id);
@@ -52,27 +50,39 @@ function ChatsList() {
     setOpenProfile(() => false);
   };
 
-  // Debounce clear typing state after 2 seconds
-  const clearTypingState = useCallback(
-    debounce(() => setIsTyping(""), 2000),
-    []
-  );
+  const debounceMap = useRef({});
+
+  const getDebounceFunction = (chatId, userId) => {
+    const key = `${chatId}-${userId}`;
+    if (!debounceMap.current[key]) {
+      debounceMap.current[key] = debounce(() => {
+        dispatch(chatsActions.removeIsTyping({ chatId }));
+      }, 2000);
+    }
+    return debounceMap.current[key];
+  };
 
   useEffect(() => {
     const handleTyping = ({ chatId, userId, user }) => {
-      setIsTyping(chatId);
-      setTypingUser(user);
-      clearTypingState();
+      dispatch(chatsActions.setIsTyping({ chatId, user }));
+      const debounceFunction = getDebounceFunction(chatId, userId);
+      debounceFunction();
     };
+
     socket.on("typing", handleTyping);
 
     return () => {
       socket.off("typing", handleTyping);
     };
-  }, [clearTypingState]);
+  }, [dispatch]);
 
   useEffect(() => {
-    socket.on("newMessage", ({ message }) => {
+    socket.on("newMessage", ({ message, data }) => {
+      if (data) {
+        dispatch(fetchUserChats());
+        if (message.sender._id === currentUser) setActiveChat(data);
+        return;
+      }
       dispatch(
         chatsActions.updateChatMessages({
           chatId: message.chatId,
@@ -88,8 +98,9 @@ function ChatsList() {
   }, [socket, currentUser, activeChat]);
 
   useEffect(() => {
+    dispatch(chatsActions.setIsLoading(true));
     dispatch(fetchUserChats());
-  }, [dispatch, chats.changed]);
+  }, [dispatch]);
 
   let content;
 
@@ -103,17 +114,17 @@ function ChatsList() {
           ? chat.users.filter((user) => user._id !== currentUser)[0]._id
           : null;
       if (contacts[contactId]) {
-        chatData = {...chatData, name: contacts[contactId].name}
+        chatData = { ...chatData, name: contacts[contactId].name };
       }
-          
+
       return (
         <div className={classes.chat} key={chat._id}>
           <ChatCard
             chatData={chatData}
             onClick={activeChatHandler}
             className={activeChat?._id === chat._id ? classes.active : null}
-            isTyping={isTyping}
-            typingUser={typingUser}
+            isTyping={chats.typing[chat._id] ? chat._id : null}
+            typingUser={chats.typing[chat._id]}
           />
         </div>
       );
@@ -155,8 +166,8 @@ function ChatsList() {
           key={activeChat._id}
           onHideChat={hideChatHandler}
           className={`${showChat ? classes["show-chat"] : undefined}`}
-          isTyping={isTyping}
-          typingUser={typingUser}
+          isTyping={chats.typing[activeChat._id] ? activeChat._id : null}
+          typingUser={chats.typing[activeChat._id]}
         />
       ) : (
         <p className={classes.select}>Select a chat to start conversation</p>

@@ -6,6 +6,7 @@ const chatsInitialState = {
   changed: false,
   messages: {},
   unSentMessages: {},
+  typing: {},
 };
 
 const chatsSlice = createSlice({
@@ -30,12 +31,14 @@ const chatsSlice = createSlice({
     },
     updateChatMessages: (state, action) => {
       const { chatId, message, currentUser, activeChat } = action.payload;
+
       if (!state.messages[chatId]) {
         state.messages[chatId] = [];
       }
       state.messages[chatId].push(message);
+
       const chatIndex = state.chats.findIndex((chat) => chat._id === chatId);
-      if (chatIndex !== -1) {
+      if (chatIndex >= 0) {
         state.chats[chatIndex].lastMessage = message;
         if (
           message.sender._id !== currentUser &&
@@ -61,6 +64,15 @@ const chatsSlice = createSlice({
       } else {
         state.unSentMessages[createdAt] = action.payload;
       }
+    },
+    setIsTyping: (state, action) => {
+      const { chatId, user } = action.payload;
+      console.log(action.payload)
+      state.typing[chatId] = user;
+    },
+    removeIsTyping: (state, action) => {
+      const { chatId } = action.payload;
+      delete state.typing[chatId];
     },
   },
 });

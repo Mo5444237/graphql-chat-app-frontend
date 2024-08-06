@@ -11,14 +11,14 @@ import { SIGNUP_MUTATION } from "../../services/auth";
 function Signup() {
   const navigate = useNavigate();
 
-   const {
-     value: fullNameValue,
-     isValid: fullNameIsValid,
-     hasError: fullNameHasError,
-     valueBlurHandler: fullNameBlurHandler,
-     valueChangeHandler: fullNameChangeHandler,
+  const {
+    value: fullNameValue,
+    isValid: fullNameIsValid,
+    hasError: fullNameHasError,
+    valueBlurHandler: fullNameBlurHandler,
+    valueChangeHandler: fullNameChangeHandler,
   } = useInput((value) => value.trim() !== "");
-  
+
   const {
     value: emailValue,
     isValid: emailIsValid,
@@ -47,11 +47,18 @@ function Signup() {
 
   let formIsValid = false;
 
-  if (fullNameIsValid && emailIsValid && passwordIsValid && passwordConfirmationIsValid) {
+  if (
+    fullNameIsValid &&
+    emailIsValid &&
+    passwordIsValid &&
+    passwordConfirmationIsValid
+  ) {
     formIsValid = true;
   }
 
-  const [signup] = useMutation(SIGNUP_MUTATION);
+  const [signup] = useMutation(SIGNUP_MUTATION, {
+    fetchPolicy: "no-cache",
+  });
 
   const submitHandler = async (e) => {
     e.preventDefault();

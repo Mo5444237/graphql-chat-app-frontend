@@ -31,6 +31,10 @@ export const GET_USER_QUERY = gql`
       avatar
       online
       lastSeen
+      blockedUsers {
+        _id
+        name
+      }
     }
   }
 `;
@@ -60,6 +64,24 @@ export const EDIT_PROFILE_MUTATION = gql`
       avatar
       online
       lastSeen
+    }
+  }
+`;
+
+export const BLOCK_USER_MUTATION = gql`
+  mutation BlockUser($userId: ID!) {
+    blockUser(userId: $userId) {
+      _id
+      name
+    }
+  }
+`;
+
+export const UNBLOCK_USER_MUTATION = gql`
+  mutation UnblockUser($userId: ID!) {
+    unblockUser(userId: $userId) {
+      _id
+      name
     }
   }
 `;

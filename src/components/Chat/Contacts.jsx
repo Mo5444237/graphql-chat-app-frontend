@@ -10,18 +10,20 @@ import { useState } from "react";
 import AddContact from "./AddContact";
 import { useDispatch, useSelector } from "react-redux";
 import { contactsActions } from "../../store/contacts-slice";
+import GroupIcon from "../UI/GroupIcon";
+import GroupList from "./GroupList";
 
 function Contacts({ open, ...props }) {
-  const [openModel, setOpenModel] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [openGroupList, setOpenGroupList] = useState(false);
   const contacts = useSelector((state) => state.contacts.contacts);
   const dispatch = useDispatch();
 
   const { loading, data, error } = useQuery(GET_CONTACTS_QUERY, {
     onCompleted: (data) => {
-      console.log(data.getContacts)
       dispatch(contactsActions.setContacts(data.getContacts));
     },
-    notifyOnNetworkStatusChange: true
+    notifyOnNetworkStatusChange: true,
   });
 
   const chats = useSelector((state) => state.chats.chats);
@@ -38,7 +40,7 @@ function Contacts({ open, ...props }) {
         chat.type !== "group" &&
         chat.users.some((user) => user._id === contact._id)
       ) {
-        return {...chat, name: contact.name};
+        return { ...chat, name: contact.name };
       }
     }
     return null;
@@ -65,12 +67,21 @@ function Contacts({ open, ...props }) {
     console.log("Something Went Wrong!");
   }
 
-  const openModelHandler = () => {
-    setOpenModel(true);
+  const openModalHandler = () => {
+    setOpenModal(true);
   };
 
   const closeModelHandler = () => {
-    setOpenModel(false);
+    setOpenModal(false);
+  };
+
+  const openGroupListHandler = () => {
+    setOpenGroupList(true);
+    props.closeContactsList();
+  };
+
+  const closeGroupListHandler = () => {
+    setOpenGroupList(false);
   };
 
   return (
@@ -79,9 +90,19 @@ function Contacts({ open, ...props }) {
         <CancelIcon onClick={props.closeContactsList} />
         <Search />
       </div>
-      <div className={classes.body}>{content}</div>
-      <AddIcon className={classes.icon} onClick={openModelHandler} />
-      {openModel && <AddContact onHideModel={closeModelHandler} />}
+      <div className={classes.body}>
+        <GroupList
+          open={openGroupList}
+          closeGroupList={closeGroupListHandler}
+        />
+        <div className={classes.group} onClick={openGroupListHandler}>
+          <GroupIcon />
+          <p>Create Group</p>
+        </div>
+        {content}
+      </div>
+      <AddIcon className={classes.icon} onClick={openModalHandler} />
+      {openModal && <AddContact onHideModel={closeModelHandler} />}
     </div>
   );
 }

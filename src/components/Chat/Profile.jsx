@@ -1,4 +1,4 @@
-import {useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import classes from "./Profile.module.css";
 
 import defaultImage from "../../assets/defaultImage.png";
@@ -6,10 +6,13 @@ import NewChatIcon from "../UI/NewChatIcon";
 import BackIcon from "../UI/Backicon";
 import { useState } from "react";
 import EditProfile from "./EditProfile";
+import BlockIcon from "../UI/BlockIcon";
+import BlockList from "./BlockList";
 
 function Profile({ open, ...props }) {
   const user = useSelector((state) => state.user.user);
   const [openModal, setOpenModal] = useState();
+  const [openBlockedModal, setOpenBlockedModal] = useState();
 
   const openModalHandler = () => {
     setOpenModal(true);
@@ -17,6 +20,14 @@ function Profile({ open, ...props }) {
 
   const closeModalHandler = () => {
     setOpenModal(false);
+  };
+
+  const openBlockedModelHandler = () => {
+    setOpenBlockedModal(true);
+  };
+
+  const closeBlockedModelHandler = () => {
+    setOpenBlockedModal(false);
   };
 
   return (
@@ -27,12 +38,27 @@ function Profile({ open, ...props }) {
       </div>
       <div className={classes.content}>
         <NewChatIcon className={classes.edit} onClick={openModalHandler} />
-        {openModal && <EditProfile onHideModal={closeModalHandler} user={user}/>}
+        {openModal && (
+          <EditProfile onHideModal={closeModalHandler} user={user} />
+        )}
         <div className={classes.avatar}>
           <div className={classes.img}>
             <img src={user?.avatar || defaultImage} alt="User-image" />
           </div>
           <p className={classes.name}>{user?.name}</p>
+        </div>
+        <div className={classes.tabs}>
+          <BlockList
+            open={openBlockedModal}
+            blockedUsers={user?.blockedUsers || []}
+            closeBlockedModal={closeBlockedModelHandler}
+          />
+          <div className={classes.block} onClick={openBlockedModelHandler}>
+            <BlockIcon />
+            <p>
+              Blocked Users <span>({user?.blockedUsers?.length || 0})</span>
+            </p>
+          </div>
         </div>
       </div>
     </div>

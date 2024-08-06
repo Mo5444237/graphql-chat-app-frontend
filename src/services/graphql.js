@@ -12,7 +12,7 @@ import { redirect } from "react-router-dom";
 
 const httpLink = createUploadLink({
   uri: "http://localhost:3000/graphql",
-  credentials: 'include'
+  credentials: "include",
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -47,6 +47,7 @@ const refreshToken = async (client) => {
   } catch (error) {
     console.error("Error refreshing token:", error);
     localStorage.removeItem("token");
+    redirect("/login");
     return null;
   }
 };
@@ -75,9 +76,9 @@ const errorLink = onError(
                   };
                   forward(operation).subscribe(subscriber);
                 } else {
-                  localStorage.removeItem('token');
-                  redirect('/login');
+                  localStorage.removeItem("token");
                   observer.error(err);
+                  return redirect("/");
                 }
               })
               .catch(observer.error.bind(observer));

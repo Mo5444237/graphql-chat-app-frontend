@@ -23,13 +23,13 @@
 .modal .container form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
   align-items: center;
 }
 
 form .actions {
   width: 100%;
   height: 3rem;
+  padding-top: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;

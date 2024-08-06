@@ -39,13 +39,23 @@ h1 {
 
 .chats .new-chat path {
   stroke: transparent;
-} 
+}
 
 .chats-list {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  padding-right: .5rem;
   overflow: auto;
+  transition: all 3s ease-out;
+}
+
+.chats-list::-webkit-scrollbar {
+  display: none;
+}
+
+.chats-list:hover::-webkit-scrollbar {
+  display: block;
 }
 
 .active {

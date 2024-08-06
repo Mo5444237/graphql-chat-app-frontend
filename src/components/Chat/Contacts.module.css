@@ -36,6 +36,26 @@
   overflow: auto;
 }
 
+.contacts .body .group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 0.75rem;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.group svg {
+  width: 50px;
+}
+
+.group svg path,
+.group svg circle, 
+.group svg rect {
+  stroke: var(--bgColor-dark-400);
+  fill: var(--bgColor-dark-400);
+}
+
 .contacts .icon {
   position: absolute;
   bottom: 2rem;
@@ -43,7 +63,7 @@
 }
 
 .contacts .icon path {
-  stroke: #00ACFF;
+  stroke: #00acff;
 }
 
 @media (min-width: 992px) {

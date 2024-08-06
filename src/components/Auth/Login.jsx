@@ -38,7 +38,9 @@ function Login() {
     formIsValid = true;
   }
 
-  const [login, { loading }] = useMutation(LOGIN_MUTATION);
+  const [login, { loading }] = useMutation(LOGIN_MUTATION, {
+    fetchPolicy: "no-cache"
+  });
   const dispatch = useDispatch();
 
   const submitHandler = async (e) => {

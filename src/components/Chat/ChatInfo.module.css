@@ -113,8 +113,8 @@
 .add svg path,
 .add svg circle,
 .add svg rect {
-  stroke: var(--bgColor-dark-400);
-  fill: var(--bgColor-dark-400);
+  stroke: var(--fgColor-muted);
+  fill: var(--fgColor-muted);
 }
 
 .members .users .user {
@@ -148,7 +148,6 @@
   display: flex;
   gap: 0.5rem;
   align-items: center;
-  color: var(--error-color);
   cursor: pointer;
 }
 
@@ -163,8 +162,8 @@
 
 .modal .actions p {
   margin: 0;
+  color: var(--error-color);
 }
-
 
 @media (max-width: 768px) {
   .modal {

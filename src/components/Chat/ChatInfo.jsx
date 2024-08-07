@@ -175,18 +175,23 @@ function ChatInfo({ chatData, ...props }) {
           <h3>Media</h3>
           <div className={classes.images}>{media}</div>
         </div>
-        <div className={classes.members}>
-          <h3>Members</h3>
-          <div className={classes.users}>
-            {isAdmin && (
-              <div className={classes.add} onClick={openAddMembersModalHandler}>
-                <GroupIcon />
-                <p>Add Members</p>
-              </div>
-            )}
-            {members}
+        {!isPrivate && (
+          <div className={classes.members}>
+            <h3>Members</h3>
+            <div className={classes.users}>
+              {isAdmin && (
+                <div
+                  className={classes.add}
+                  onClick={openAddMembersModalHandler}
+                >
+                  <GroupIcon />
+                  <p>Add Members</p>
+                </div>
+              )}
+              {members}
+            </div>
           </div>
-        </div>
+        )}
         <div className={classes.actions}>
           {isPrivate && (
             <div

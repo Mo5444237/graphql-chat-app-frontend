@@ -11,6 +11,7 @@ function App() {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user);
+  const theme = useSelector((state) => state.theme.mode);
   const token = localStorage.getItem("token");
 
   socket.on("connect", () => {
@@ -25,6 +26,10 @@ function App() {
       dispatch(fetchUserData());
     }
   }, [dispatch, user.isAuthenticated]);
+
+  useEffect(() => {
+    document.body.className = theme === "light" ? "light-mode" : "dark-mode";
+  }, [theme]);
 
   return (
     <ApolloProvider client={client}>

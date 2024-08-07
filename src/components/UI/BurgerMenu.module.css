@@ -60,7 +60,7 @@
   top: 100%;
   left: 0;
   width: 20rem;
-  background-color: #121212eb;
+  background-color: var(--bgColor-dark-300);
   border-radius: 8px;
 }
 

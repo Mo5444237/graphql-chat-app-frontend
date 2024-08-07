@@ -12,11 +12,11 @@
   background-color: var(--bgColor-dark-200);
   padding: 0 15px;
   border-radius: 16px;
-  border: 1px solid rgb(63, 63, 63);
+  border: 1px solid var(--border-color);
   margin-bottom: 2rem;
 }
 .messageBox:focus-within {
-  border: 1px solid rgb(110, 110, 110);
+  border: 1px solid var(--fgColor-muted);
 }
 .fileUploadWrapper {
   width: -moz-fit-content;
@@ -56,7 +56,7 @@
 }
 .fileUploadWrapper label:hover svg circle {
   stroke: #fff;
-  fill: #3c3c3c;
+  fill: var(--fgColor-muted);
 }
 
 .messageInput {
@@ -66,10 +66,10 @@
   outline: none;
   border: none;
   padding-left: 10px;
-  color: white;
+  color: var(--fgColor-default);
 }
 .messageInput:focus ~ button svg path,
 .messageInput:valid ~ button svg path {
-  fill: #3c3c3c;
+  fill: var(--fgColor-muted);
   stroke: white;
 }

@@ -52,8 +52,8 @@
 .group svg path,
 .group svg circle, 
 .group svg rect {
-  stroke: var(--bgColor-dark-400);
-  fill: var(--bgColor-dark-400);
+  stroke: var(--fgColor-muted);
+  fill: var(--fgColor-muted);
 }
 
 .contacts .icon {

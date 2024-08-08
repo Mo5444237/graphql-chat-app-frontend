@@ -16,4 +16,14 @@ export const ADD_CONTACT_MUTATION = gql`
   }
 `;
 
-// const DELETE_CONTACT_MUTATION = gql``;
+export const EDIT_CONTACT_MUTATION = gql`
+  mutation EditContact($contactInput: contactEditData!) {
+    editContact(contactInput: $contactInput)
+  }
+`;
+
+export const DELETE_CONTACT_MUTATION = gql`
+  mutation EditContact($userId: ID!) {
+    deleteContact(userId: $userId)
+  }
+`;

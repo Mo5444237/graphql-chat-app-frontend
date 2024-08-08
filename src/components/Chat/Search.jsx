@@ -1,12 +1,18 @@
+import { useState } from "react";
 import classes from "./Search.module.css";
 
-function Search() {
+function Search(props) {
+  const setSearchHandler = (e) => {
+    props.searchTerm(e.target.value);
+  };
+
   return (
     <div className={classes.search}>
       <input
         type="text"
         className={classes["search-input"]}
         placeholder="Type your text"
+        onChange={setSearchHandler}
       />
       <button className={classes["search-button"]}>
         <svg

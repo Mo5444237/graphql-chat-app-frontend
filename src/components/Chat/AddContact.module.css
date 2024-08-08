@@ -18,6 +18,7 @@
 .modal .container h2 {
   margin-top: 0;
   text-align: center;
+  color: var(--fgColor-default);
 }
 
 .modal .container form {

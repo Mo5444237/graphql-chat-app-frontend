@@ -6,7 +6,7 @@ import { GET_CONTACTS_QUERY } from "../../services/contact";
 import AddIcon from "../UI/AddIcon";
 import ContactCard from "./ContactCard";
 import ChatSkeleton from "./ChatSkeleton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddContact from "./AddContact";
 import { useDispatch, useSelector } from "react-redux";
 import { contactsActions } from "../../store/contacts-slice";
@@ -16,6 +16,8 @@ import GroupList from "./GroupList";
 function Contacts({ open, ...props }) {
   const [openModal, setOpenModal] = useState(false);
   const [openGroupList, setOpenGroupList] = useState(false);
+  const [searchTerm, setSearchTerm] = useState();
+
   const contacts = useSelector((state) => state.contacts.contacts);
   const dispatch = useDispatch();
 
@@ -58,10 +60,22 @@ function Contacts({ open, ...props }) {
   content = Object.entries(contacts).map(([key, contact]) => (
     <ContactCard
       contact={contact}
-      key={contact._id + contact.name}
+      key={contact._id}
       onClick={activeChatHandler.bind(null, contact)}
     />
   ));
+
+  const searchHandler = (term) => {
+    setSearchTerm(term);
+  };
+
+  if (searchTerm) {
+    content = content.filter((contact) =>
+      contacts[contact.key]?.name
+        .toLowerCase()
+        .includes(searchTerm?.toLowerCase())
+    );
+  }
 
   if (error) {
     console.log("Something Went Wrong!");
@@ -88,7 +102,7 @@ function Contacts({ open, ...props }) {
     <div className={`${classes.contacts} ${open ? classes.open : ""}`}>
       <div className={classes.head}>
         <CancelIcon onClick={props.closeContactsList} />
-        <Search />
+        <Search searchTerm={searchHandler} />
       </div>
       <div className={classes.body}>
         <GroupList

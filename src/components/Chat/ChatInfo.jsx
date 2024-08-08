@@ -10,34 +10,20 @@ import ImagePreview from "./ImagePreview";
 import EditGroup from "./EditGroup";
 import NewChatIcon from "../UI/NewChatIcon";
 import { useDispatch, useSelector } from "react-redux";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { BLOCK_USER_MUTATION } from "../../services/auth";
 import { userActions } from "../../store/user-slice";
 import GroupIcon from "../UI/GroupIcon";
-import { DELETE_USER_FROM_CHAT } from "../../services/chat";
+import {
+  DELETE_USER_FROM_CHAT,
+  GET_CHAT_MEDIA_QUERY,
+} from "../../services/chat";
 import AddMembers from "./AddMembers";
+import EditContact from "./EditContact";
 
-const images = [
-  {
-    id: 1,
-    src: "https://tmssl.akamaized.net/images/foto/galerie/cristiano-ronaldo-al-nassr-2023-1692731063-114594.jpg?lm=1692731118",
-  },
-  {
-    id: 2,
-    src: "https://tmssl.akamaized.net/images/foto/galerie/cristiano-ronaldo-al-nassr-2023-1692731063-114594.jpg?lm=1692731118",
-  },
-  {
-    id: 3,
-    src: "https://tmssl.akamaized.net/images/foto/galerie/cristiano-ronaldo-al-nassr-2023-1692731063-114594.jpg?lm=1692731118",
-  },
-  {
-    id: 4,
-    src: "https://tmssl.akamaized.net/images/foto/galerie/cristiano-ronaldo-al-nassr-2023-1692731063-114594.jpg?lm=1692731118",
-  },
-];
 
 function ChatInfo({ chatData, ...props }) {
-  const [viewImage, setViewImage] = useState(false);
+  const [viewImage, setViewImage] = useState("");
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
 
@@ -50,8 +36,22 @@ function ChatInfo({ chatData, ...props }) {
     isPrivate && chatData.users.find((user) => user._id !== userId);
   const isAdmin = chatData?.admin === userId;
 
-  const media = images.map((image) => {
-    return <img key={image.id} src={image.src} alt="Media" />;
+  const { data: images } = useQuery(GET_CHAT_MEDIA_QUERY, {
+    variables: {
+      chatId: chatData._id,
+    },
+    fetchPolicy: 'cache-and-network'
+  });
+
+  const media = images?.getChatMedia.map((image) => {
+    return (
+      <img
+        key={image._id}
+        src={image.content}
+        alt="Media"
+        onClick={() => setViewImage(image.content)}
+      />
+    );
   });
 
   const [blockUser] = useMutation(BLOCK_USER_MUTATION, {
@@ -103,7 +103,6 @@ function ChatInfo({ chatData, ...props }) {
   };
 
   const openAddMembersModalHandler = () => {
-    console.log("Clicked");
     setOpenAddModal(true);
   };
 
@@ -149,31 +148,39 @@ function ChatInfo({ chatData, ...props }) {
           />
         </div>
         <div className={classes.chat}>
-          {isAdmin && (
+          {(isAdmin || isPrivate) && (
             <NewChatIcon
               className={classes.edit}
               onClick={openEditModalHandler}
             />
           )}
-          {openEditModal && (
-            <EditGroup onHideModal={closeEditModalHandler} chat={chatData} />
-          )}
+          {openEditModal &&
+            (!isPrivate ? (
+              <EditGroup onHideModal={closeEditModalHandler} chat={chatData} />
+            ) : (
+              <EditContact
+                onHideModal={closeEditModalHandler}
+                chat={chatData}
+              />
+            ))}
           {viewImage && (
             <ImagePreview
-              img={chatData.avatar || defaultImage}
-              onHideModal={() => setViewImage(false)}
+              img={viewImage}
+              onHideModal={() => setViewImage("")}
             />
           )}
           <img
             src={chatData.avatar || defaultImage}
             alt="User"
-            onClick={() => setViewImage(true)}
+            onClick={() => setViewImage(chatData.avatar || defaultImage)}
           />
           <h3>{chatData.name}</h3>
         </div>
         <div className={classes.media}>
           <h3>Media</h3>
-          <div className={classes.images}>{media}</div>
+          <div className={classes.images}>
+            {media?.length ? media : <p>No media to display</p>}
+          </div>
         </div>
         {!isPrivate && (
           <div className={classes.members}>

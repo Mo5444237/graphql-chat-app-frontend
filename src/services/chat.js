@@ -55,6 +55,29 @@ export const GET_CHAT_MESSAGES_QUERY = gql`
   }
 `;
 
+export const GET_CHAT_MEDIA_QUERY = gql`
+  query GetChatMedia($chatId: ID!) {
+    getChatMedia(chatId: $chatId) {
+      _id
+      chatId
+      content
+      caption
+      type
+      sender {
+        _id
+        name
+        avatar
+      }
+      readBy {
+        _id
+        name
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const CREATE_CHAT_MUTATION = gql`
   mutation CreateChat($chatInput: ChatInputData!) {
     createChat(chatInput: $chatInput) {

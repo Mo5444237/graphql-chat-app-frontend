@@ -19,9 +19,12 @@ function ChatsList() {
   const [showChat, setShowChat] = useState(false);
   const [openContacts, setOpenContacts] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const chats = useSelector((state) => state.chats);
   const currentUser = useSelector((state) => state.user.user?._id);
+  const contacts = useSelector((state) => state.contacts.contacts);
+
   const dispatch = useDispatch();
 
   const activeChatHandler = (chatData) => {
@@ -80,8 +83,8 @@ function ChatsList() {
     socket.on("newMessage", ({ message, data }) => {
       if (data) {
         dispatch(fetchUserChats());
-        if (message.sender._id === currentUser) setActiveChat(data);
-        return;
+        console.log(data.users);
+        if (activeChat?._id === data._id) setActiveChat(data);
       }
       dispatch(
         chatsActions.updateChatMessages({
@@ -104,7 +107,10 @@ function ChatsList() {
 
   let content;
 
-  const contacts = useSelector((state) => state.contacts.contacts);
+  const searchHandler = (term) => {
+    setSearchTerm(term);
+  };
+
   if (chats.chats) {
     content = chats.chats.map((chat) => {
       let chatData = chat;
@@ -129,6 +135,13 @@ function ChatsList() {
         </div>
       );
     });
+
+    if (searchTerm) {
+      content = content.filter((chat) => {
+        let name = chat.props.children.props.chatData.name;
+        return name.toLowerCase().includes(searchTerm?.toLowerCase());
+      });
+    }
   }
 
   if (chats.isLoading) {
@@ -144,7 +157,7 @@ function ChatsList() {
       <div className={classes.chats}>
         <div className={classes.head}>
           <Menu openProfile={openProfileList} />
-          <Search />
+          <Search searchTerm={searchHandler} />
         </div>
         <div className={classes["chats-list"]}>
           {content}

@@ -85,3 +85,9 @@ export const UNBLOCK_USER_MUTATION = gql`
     }
   }
 `;
+
+export const LOGOUT_MUTATION = gql`
+  mutation Mutation {
+    logout
+  }
+`;

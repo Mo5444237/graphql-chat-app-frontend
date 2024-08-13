@@ -68,6 +68,15 @@ h3 {
   color: var(--fgColor-muted);
 }
 
+.header .info .active {
+  color: var(--primary-color-default);
+}
+
+.header .info .lastSeen {
+  color: var(--fgColor-default);
+  animation: disapear 3s forwards linear;
+}
+
 .header .info .typing {
   color: var(--primary-color-default);
 }
@@ -94,5 +103,15 @@ h3 {
 
   .chat .header .back {
     display: flex;
+  }
+}
+
+@keyframes disapear {
+  from {
+    display: block;
+  }
+
+  to {
+    display: none;
   }
 }

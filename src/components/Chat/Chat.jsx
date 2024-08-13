@@ -1,20 +1,26 @@
-import { useCallback, useEffect, useRef, useState } from "react";
 import classes from "./Chat.module.css";
+import defaultImage from "../../assets/defaultImage.png";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import ChatInfo from "./ChatInfo";
 import Message from "./Message";
 import MessageInput from "./MessageInput";
-import { useDispatch, useSelector } from "react-redux";
+import BackIcon from "../UI/Backicon";
+
 import {
   fetchChatMessages,
   markMessagesAsRead,
 } from "../../store/chats-actions";
 
-import defaultImage from "../../assets/defaultImage.png";
 import { debounce } from "../../utils/debounce";
-import BackIcon from "../UI/Backicon";
+import { getLastSeen } from "../../utils/getLastSeen";
 
 function Chat({ chatData, isTyping, typingUser, ...props }) {
   const [showChatInfo, setShowChatInfo] = useState(false);
+  const scrollRef = useRef();
+  const dispatch = useDispatch();
 
   const currentUser = useSelector((state) => state.user.user);
   const messages = useSelector((state) => state.chats.messages[chatData._id]);
@@ -24,12 +30,10 @@ function Chat({ chatData, isTyping, typingUser, ...props }) {
   const chatUser =
     chatData.type === "private" &&
     chatData.users.find((user) => user._id !== currentUser._id);
+
   const isBlocked =
     chatUser &&
     currentUser.blockedUsers.find((user) => user._id === chatUser._id);
-
-  const scrollRef = useRef();
-  const dispatch = useDispatch();
 
   const showChatInfoHandler = () => {
     setShowChatInfo(true);
@@ -76,7 +80,16 @@ function Chat({ chatData, isTyping, typingUser, ...props }) {
           </div>
           <div className={classes.content}>
             <h3>{chatData.name}</h3>
-            {isTyping && !isBlocked ? (
+            {!isTyping && !isBlocked && contacts[chatUser._id]?.online ? (
+              <span className={classes.active}>online</span>
+            ) : (
+              <span className={classes.lastSeen}>
+                {!isBlocked &&
+                  contacts[chatUser._id]?.lastSeen &&
+                  getLastSeen(contacts[chatUser._id]?.lastSeen)}
+              </span>
+            )}
+            {isTyping && !isBlocked && (
               <p className={classes.typing}>
                 {chatData.type === "group"
                   ? `${
@@ -85,8 +98,6 @@ function Chat({ chatData, isTyping, typingUser, ...props }) {
                   : ""}
                 typing...
               </p>
-            ) : (
-              <p>{chatData?.lastSeen}</p>
             )}
           </div>
         </div>

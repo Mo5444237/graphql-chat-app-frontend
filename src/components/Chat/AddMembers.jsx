@@ -3,20 +3,21 @@ import defaultImage from "../../assets/defaultImage.png";
 
 import { useSelector } from "react-redux";
 import { useState } from "react";
+
 import Modal from "../UI/Modal";
 import Search from "./Search";
+import Spinner from "../UI/Spinner";
 import BackIcon from "../UI/Backicon";
 import GroupMember from "./GroupMember";
 
 import { ADD_USERS_TO_CHAT } from "../../services/chat";
 import { useMutation } from "@apollo/client";
-import Spinner from "../UI/Spinner";
 
-function AddMembers({chatId, ...props}) {
+function AddMembers({ chatId, ...props }) {
   const contacts = useSelector((state) => state.contacts.contacts);
   const [usersList, setUsersList] = useState([]);
   const [AddUsers, { loading }] = useMutation(ADD_USERS_TO_CHAT, {
-    onCompleted: (data) => {
+    onCompleted: () => {
       props.closeAddModal();
       setUsersList([]);
     },

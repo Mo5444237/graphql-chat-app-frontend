@@ -1,5 +1,6 @@
 import classes from "./GroupMember.module.css";
 import defaultImage from "../../assets/defaultImage.png";
+
 import CheckBox from "../UI/CheckBox";
 
 function GroupMember({ contact, ...props }) {
@@ -11,7 +12,10 @@ function GroupMember({ contact, ...props }) {
         </div>
         <p className={classes.name}>{contact.name}</p>
       </div>
-      <CheckBox onClick={() => props.toggleUserHandler(contact._id)} />
+      <CheckBox
+        onClick={() => props.toggleUserHandler(contact._id)}
+        checked={props.checked}
+      />
     </div>
   );
 }

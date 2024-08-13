@@ -1,12 +1,15 @@
-import { useState } from "react";
 import classes from "./ImagePicker.module.css";
+import { useState } from "react";
+
 import Input from "../UI/Input";
-import SendButton from "../UI/SendButton";
-import { SEND_MESSAGE_MUTATION } from "../../services/chat";
-import { useMutation } from "@apollo/client";
 import Spinner from "../UI/Spinner";
+import SendButton from "../UI/SendButton";
+
 import { useDispatch } from "react-redux";
 import { chatsActions } from "../../store/chats-slice";
+
+import { SEND_MESSAGE_MUTATION } from "../../services/chat";
+import { useMutation } from "@apollo/client";
 
 function ImageViewer({ image, chatId, users, ...props }) {
   const [caption, setCaption] = useState("");

@@ -1,18 +1,21 @@
-import { useEffect, useRef, useState } from "react";
-import ChatCard from "./ChatCard";
 import classes from "./ChatsList.module.css";
+import { useEffect, useRef, useState } from "react";
+
+import Menu from "./Menu";
 import Chat from "./Chat";
 import Search from "./Search";
-import Menu from "./Menu";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUserChats } from "../../store/chats-actions";
+import ChatCard from "./ChatCard";
+import Profile from "./Profile";
+import Contacts from "./Contacts";
 import ChatSkeleton from "./ChatSkeleton";
 import NewChatIcon from "../UI/NewChatIcon";
-import Contacts from "./Contacts";
+
+import { useDispatch, useSelector } from "react-redux";
 import { chatsActions } from "../../store/chats-slice";
+import { fetchUserChats } from "../../store/chats-actions";
+
 import socket from "../../services/socket";
 import { debounce } from "../../utils/debounce";
-import Profile from "./Profile";
 
 function ChatsList() {
   const [activeChat, setActiveChat] = useState(null);
@@ -83,8 +86,17 @@ function ChatsList() {
     socket.on("newMessage", ({ message, data }) => {
       if (data) {
         dispatch(fetchUserChats());
-        console.log(data.users);
-        if (activeChat?._id === data._id) setActiveChat(data);
+        const contactId =
+          data.type === "private"
+            ? data.users.filter((user) => user._id !== currentUser)[0]._id
+            : null;
+        const chatName = contacts[contactId]?.name || data.name;
+
+        if (activeChat?._id === data._id || message.sender._id === currentUser)
+          setActiveChat({
+            ...data,
+            name: chatName,
+          });
       }
       dispatch(
         chatsActions.updateChatMessages({

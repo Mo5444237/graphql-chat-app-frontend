@@ -15,6 +15,13 @@ const contactsSlice = createSlice({
       }, {});
       state.contacts = contacts;
     },
+    updateContactStatus: (state, action) => {
+      const { userId, online, lastSeen } = action.payload;
+      if (state.contacts[userId]) {
+        state.contacts[userId].online = online;
+        state.contacts[userId].lastSeen = lastSeen;
+      }
+    },
   },
 });
 

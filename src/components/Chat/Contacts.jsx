@@ -1,17 +1,21 @@
-import { useQuery } from "@apollo/client";
-import CancelIcon from "../UI/CancelIcon";
 import classes from "./Contacts.module.css";
+import { useEffect, useState } from "react";
+
 import Search from "./Search";
-import { GET_CONTACTS_QUERY } from "../../services/contact";
-import AddIcon from "../UI/AddIcon";
+import AddContact from "./AddContact";
 import ContactCard from "./ContactCard";
 import ChatSkeleton from "./ChatSkeleton";
-import { useEffect, useState } from "react";
-import AddContact from "./AddContact";
+import GroupList from "./GroupList";
+import AddIcon from "../UI/AddIcon";
+import GroupIcon from "../UI/GroupIcon";
+import CancelIcon from "../UI/CancelIcon";
+
 import { useDispatch, useSelector } from "react-redux";
 import { contactsActions } from "../../store/contacts-slice";
-import GroupIcon from "../UI/GroupIcon";
-import GroupList from "./GroupList";
+
+import { useQuery } from "@apollo/client";
+import { GET_CONTACTS_QUERY } from "../../services/contact";
+import socket from "../../services/socket";
 
 function Contacts({ open, ...props }) {
   const [openModal, setOpenModal] = useState(false);
@@ -27,6 +31,19 @@ function Contacts({ open, ...props }) {
     },
     notifyOnNetworkStatusChange: true,
   });
+
+  useEffect(() => {
+    socket.on("userStatusChanged", ({ userId, online, lastSeen }) => {
+      console.log(userId);
+      dispatch(
+        contactsActions.updateContactStatus({ userId, online, lastSeen })
+      );
+    });
+
+    return () => {
+      socket.off("userStatusChanged");
+    };
+  }, [dispatch]);
 
   const chats = useSelector((state) => state.chats.chats);
   const userId = useSelector((state) => state.user.user?._id);
@@ -51,6 +68,7 @@ function Contacts({ open, ...props }) {
   const activeChatHandler = (contact) => {
     const chat = getChatByUserId(contact) || {
       ...contact,
+      type: "private",
       users: [{ _id: contact._id }, { _id: userId }],
     };
     props.onClickContact(chat);

@@ -1,4 +1,4 @@
-import { RouterProvider, redirect } from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
 import router from "./BrowserRouter";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -17,12 +17,14 @@ function App() {
   socket.on("connect", () => {
     console.log("Connected to server");
   });
-  
+
   useEffect(() => {
     if (!token) {
       router.navigate("/auth?mode=login");
+      socket.disconnect();
     } else {
       router.navigate("/");
+      socket.connect();
       dispatch(fetchUserData());
     }
   }, [dispatch, user.isAuthenticated]);

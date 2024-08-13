@@ -11,7 +11,7 @@ export const fetchUserChats = () => {
     try {
       const { data } = await client.query({
         query: GET_CHATS_QUERY,
-        fetchPolicy: "no-cache",
+        fetchPolicy: "network-only",
       });
       dispatch(chatsActions.setChats(data.getUserChats));
     } catch (error) {

@@ -1,15 +1,17 @@
-import { useMutation } from "@apollo/client";
+import classes from "./AddContact.module.css";
+
 import Button from "../UI/Button";
 import Input from "../UI/Input";
 import Modal from "../UI/Modal";
+import Spinner from "../UI/Spinner";
 import useInput from "../hooks/use-input";
-import classes from "./AddContact.module.css";
+
 import {
   ADD_CONTACT_MUTATION,
   GET_CONTACTS_QUERY,
 } from "../../services/contact";
+import { useMutation } from "@apollo/client";
 import client from "../../services/graphql";
-import Spinner from "../UI/Spinner";
 
 function AddContact(props) {
   const {

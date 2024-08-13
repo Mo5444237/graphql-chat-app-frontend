@@ -1,16 +1,18 @@
 import classes from "./EditProfile.module.css";
 
 import Modal from "../UI/Modal";
-import { useMutation } from "@apollo/client";
+import Input from "../UI/Input";
 import Button from "../UI/Button";
 import Spinner from "../UI/Spinner";
 import useInput from "../hooks/use-input";
-import Input from "../UI/Input";
+
+import { useSelector } from "react-redux";
+
+import { useMutation } from "@apollo/client";
 import {
   EDIT_CONTACT_MUTATION,
   GET_CONTACTS_QUERY,
 } from "../../services/contact";
-import { useSelector } from "react-redux";
 import client from "../../services/graphql";
 
 function EditContact({ chat, ...props }) {

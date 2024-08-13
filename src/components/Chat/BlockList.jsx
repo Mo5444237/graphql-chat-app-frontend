@@ -1,9 +1,12 @@
-import { useMutation } from "@apollo/client";
-import BackIcon from "../UI/Backicon";
 import classes from "./BlockList.module.css";
-import { UNBLOCK_USER_MUTATION } from "../../services/auth";
+
+import BackIcon from "../UI/Backicon";
+
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../store/user-slice";
+
+import { useMutation } from "@apollo/client";
+import { UNBLOCK_USER_MUTATION } from "../../services/auth";
 
 function BlockList({ blockedUsers, open, ...props }) {
   const contacts = useSelector((state) => state.contacts.contacts);

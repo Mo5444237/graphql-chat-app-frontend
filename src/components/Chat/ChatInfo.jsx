@@ -1,26 +1,26 @@
 import classes from "./ChatInfo.module.css";
+import defaultImage from "../../assets/defaultImage.png";
 
 import { useState } from "react";
 import Modal from "../UI/Modal";
-import CancelIcon from "../UI/CancelIcon";
-import BlockIcon from "../UI/BlockIcon";
-
-import defaultImage from "../../assets/defaultImage.png";
-import ImagePreview from "./ImagePreview";
 import EditGroup from "./EditGroup";
+import AddMembers from "./AddMembers";
+import EditContact from "./EditContact";
+import ImagePreview from "./ImagePreview";
+import BlockIcon from "../UI/BlockIcon";
+import GroupIcon from "../UI/GroupIcon";
+import CancelIcon from "../UI/CancelIcon";
 import NewChatIcon from "../UI/NewChatIcon";
+
 import { useDispatch, useSelector } from "react-redux";
+import { userActions } from "../../store/user-slice";
+
 import { useMutation, useQuery } from "@apollo/client";
 import { BLOCK_USER_MUTATION } from "../../services/auth";
-import { userActions } from "../../store/user-slice";
-import GroupIcon from "../UI/GroupIcon";
 import {
   DELETE_USER_FROM_CHAT,
   GET_CHAT_MEDIA_QUERY,
 } from "../../services/chat";
-import AddMembers from "./AddMembers";
-import EditContact from "./EditContact";
-
 
 function ChatInfo({ chatData, ...props }) {
   const [viewImage, setViewImage] = useState("");
@@ -32,15 +32,17 @@ function ChatInfo({ chatData, ...props }) {
   const dispatch = useDispatch();
 
   const isPrivate = chatData.type === "private";
+
   const chatUser =
     isPrivate && chatData.users.find((user) => user._id !== userId);
+
   const isAdmin = chatData?.admin === userId;
 
   const { data: images } = useQuery(GET_CHAT_MEDIA_QUERY, {
     variables: {
       chatId: chatData._id,
     },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: "cache-and-network",
   });
 
   const media = images?.getChatMedia.map((image) => {

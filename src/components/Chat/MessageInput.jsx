@@ -1,12 +1,15 @@
-import { useRef, useState } from "react";
 import classes from "./MessageInput.module.css";
+import { useRef, useState } from "react";
+
+import ImageViewer from "./ImagePicker";
+import SendButton from "../UI/SendButton";
+
+import { useDispatch, useSelector } from "react-redux";
+import { chatsActions } from "../../store/chats-slice";
+
 import { useMutation } from "@apollo/client";
 import { SEND_MESSAGE_MUTATION } from "../../services/chat";
 import socket from "../../services/socket";
-import ImageViewer from "./ImagePicker";
-import SendButton from "../UI/SendButton";
-import { useDispatch, useSelector } from "react-redux";
-import { chatsActions } from "../../store/chats-slice";
 
 function MessageInput({ chatData, isBlocked }) {
   const [message, setMessage] = useState("");

@@ -1,16 +1,19 @@
-import { useSelector } from "react-redux";
 import classes from "./ChatCard.module.css";
 import defaultImage from "../../assets/defaultImage.png";
 
+import { useSelector } from "react-redux";
+
 function ChatCard({ chatData, isTyping, typingUser, ...props }) {
-  const userId = useSelector((state) => state.user.user._id);
-  const blockedUsers = useSelector((state) => state.user.user.blockedUsers);
+  const userId = useSelector((state) => state.user.user?._id);
+  const blockedUsers = useSelector((state) => state.user.user?.blockedUsers);
   const contacts = useSelector((state) => state.contacts.contacts);
 
   const receiver =
     chatData.type === "private" &&
     chatData.users.find((user) => user._id !== userId);
-  const isBlocked = blockedUsers.find((user) => user._id === receiver._id);
+
+  const isBlocked = blockedUsers?.find((user) => user._id === receiver._id);
+
   const lastMessage = isBlocked
     ? "You Blocked This Contact"
     : chatData.lastMessage;
@@ -55,6 +58,9 @@ function ChatCard({ chatData, isTyping, typingUser, ...props }) {
         <div className={classes["unread-messages"]}>
           {chatData.unreadMessagesCount}
         </div>
+      )}
+      {!isBlocked && contacts[receiver._id]?.online && (
+        <span className={classes.status} title="active"></span>
       )}
     </div>
   );

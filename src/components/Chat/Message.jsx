@@ -1,9 +1,12 @@
-import { useSelector } from "react-redux";
 import classes from "./Message.module.css";
-import { useState } from "react";
+
 import ImagePreview from "./ImagePreview";
-import { getTime } from "../../utils/getTime";
 import TimeIcon from "../UI/TimeIcon";
+
+import { useSelector } from "react-redux";
+import { useState } from "react";
+
+import { getTime } from "../../utils/getTime";
 
 function ImageMessage({ messageData }) {
   const [viewImage, setViewImage] = useState();

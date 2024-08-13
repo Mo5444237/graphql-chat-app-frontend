@@ -1,4 +1,3 @@
-import { useState } from "react";
 import classes from "./Search.module.css";
 
 function Search(props) {

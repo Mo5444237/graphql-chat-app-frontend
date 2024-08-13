@@ -1,20 +1,19 @@
+import classes from "./Auth.module.css";
 import { Link, redirect } from "react-router-dom";
 
 import Button from "../UI/Button";
 import Input from "../UI/Input";
+import Spinner from "../UI/Spinner";
 import useInput from "../hooks/use-input";
 
-import classes from "./Auth.module.css";
 import { useMutation } from "@apollo/client";
 import { LOGIN_MUTATION } from "../../services/auth";
 import { useDispatch } from "react-redux";
 import { userActions } from "../../store/user-slice";
-import Spinner from "../UI/Spinner";
 import { chatsActions } from "../../store/chats-slice";
-import socket from "../../services/socket";
+
 
 function Login() {
-
   const {
     value: emailValue,
     isValid: emailIsValid,
@@ -39,7 +38,7 @@ function Login() {
   }
 
   const [login, { loading }] = useMutation(LOGIN_MUTATION, {
-    fetchPolicy: "no-cache"
+    fetchPolicy: "no-cache",
   });
   const dispatch = useDispatch();
 
@@ -57,9 +56,8 @@ function Login() {
     try {
       const { data } = await login({ variables: { userInput: userData } });
       if (data.login) {
-        socket.emit("joinRoom", data.login.user._id);
-        dispatch(userActions.setUser(data.login.user));
         localStorage.setItem("token", data.login.token);
+        dispatch(userActions.setUser(data.login.user));
         dispatch(chatsActions.setChatsChanged(true));
       }
       redirect("/");

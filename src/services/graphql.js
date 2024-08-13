@@ -9,6 +9,7 @@ import { onError } from "@apollo/client/link/error";
 import { REFRESH_TOKEN_QUERY } from "./auth";
 import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
 import { redirect } from "react-router-dom";
+import socket from "./socket";
 
 const httpLink = createUploadLink({
   uri: "http://localhost:3000/graphql",
@@ -43,6 +44,9 @@ const refreshToken = async (client) => {
     });
     const newToken = data.refreshToken.token;
     localStorage.setItem("token", newToken);
+    socket.auth = {
+      token: newToken,
+    };
     return newToken;
   } catch (error) {
     console.error("Error refreshing token:", error);

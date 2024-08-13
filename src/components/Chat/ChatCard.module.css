@@ -73,3 +73,13 @@
   background-color: var(--primary-color-default);
   transition: all 0.3s ease;
 }
+
+.card .status {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--primary-color-default);
+  border-radius: 50%;
+  position: absolute;
+  left: 50px;
+  top: 50px;
+}

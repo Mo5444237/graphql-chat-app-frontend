@@ -6,6 +6,8 @@ export const GET_CONTACTS_QUERY = gql`
       _id
       name
       avatar
+      online
+      lastSeen
     }
   }
 `;

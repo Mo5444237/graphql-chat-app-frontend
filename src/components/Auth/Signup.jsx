@@ -1,10 +1,10 @@
+import classes from "./Auth.module.css";
 import { Link, useNavigate } from "react-router-dom";
 
 import Button from "../UI/Button";
 import Input from "../UI/Input";
 import useInput from "../hooks/use-input";
 
-import classes from "./Auth.module.css";
 import { useMutation } from "@apollo/client";
 import { SIGNUP_MUTATION } from "../../services/auth";
 

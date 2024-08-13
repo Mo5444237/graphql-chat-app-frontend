@@ -1,17 +1,20 @@
 import classes from "./EditProfile.module.css";
 import defaultImage from "../../assets/defaultImage.png";
 
-import Modal from "../UI/Modal";
-import { useDispatch } from "react-redux";
 import { useState } from "react";
-import { useMutation } from "@apollo/client";
-import { EDIT_PROFILE_MUTATION } from "../../services/auth";
-import { userActions } from "../../store/user-slice";
-import NewChatIcon from "../UI/NewChatIcon";
+
+import Modal from "../UI/Modal";
+import Input from "../UI/Input";
 import Button from "../UI/Button";
 import Spinner from "../UI/Spinner";
+import NewChatIcon from "../UI/NewChatIcon";
 import useInput from "../hooks/use-input";
-import Input from "../UI/Input";
+
+import { useDispatch } from "react-redux";
+import { userActions } from "../../store/user-slice";
+
+import { useMutation } from "@apollo/client";
+import { EDIT_PROFILE_MUTATION } from "../../services/auth";
 
 function EditProfile({ user, ...props }) {
   const {

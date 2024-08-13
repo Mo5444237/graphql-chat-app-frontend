@@ -1,15 +1,18 @@
-import { useSelector } from "react-redux";
+import classes from "./GroupList.module.css";
+
+import { useState } from "react";
 
 import Search from "./Search";
-import classes from "./GroupList.module.css";
-import CancelIcon from "../UI/CancelIcon";
-import { useState } from "react";
-import useInput from "../hooks/use-input";
 import Input from "../UI/Input";
-import { useMutation } from "@apollo/client";
-import { CREATE_CHAT_MUTATION } from "../../services/chat";
 import Spinner from "../UI/Spinner";
 import GroupMember from "./GroupMember";
+import CancelIcon from "../UI/CancelIcon";
+import useInput from "../hooks/use-input";
+
+import { useSelector } from "react-redux";
+
+import { useMutation } from "@apollo/client";
+import { CREATE_CHAT_MUTATION } from "../../services/chat";
 
 function GroupList({ open, ...props }) {
   const {
@@ -18,24 +21,28 @@ function GroupList({ open, ...props }) {
     hasError: groupNameHasError,
     valueBlurHandler: groupNameBlurHandler,
     valueChangeHandler: groupNameChangeHandler,
+    reset: resetName,
   } = useInput((value) => value.trim() !== "");
 
   const contacts = useSelector((state) => state.contacts.contacts);
-  const [usersList, setUsersList] = useState([]);
+  const [usersList, setUsersList] = useState({});
   const [createGroup, { loading }] = useMutation(CREATE_CHAT_MUTATION, {
     onCompleted: (data) => {
       props.closeGroupList();
-      setUsersList([]);
+      setUsersList({});
+      resetName();
     },
   });
 
   const toggleUser = (userId) => {
-    const userIndex = usersList.findIndex((user) => user === userId);
-
-    if (userIndex >= 0) {
-      setUsersList((prev) => prev.filter((user) => user !== userId));
+    if (usersList[userId]) {
+      setUsersList((prev) => ({ ...prev }));
+      delete usersList[userId];
     } else {
-      setUsersList((prev) => [...prev, userId]);
+      setUsersList((prev) => ({
+        ...prev,
+        [userId]: userId,
+      }));
     }
   };
 
@@ -46,7 +53,7 @@ function GroupList({ open, ...props }) {
       await createGroup({
         variables: {
           chatInput: {
-            users: usersList,
+            users: [...Object.values(usersList)],
             name: groupNameValue,
           },
         },
@@ -62,18 +69,23 @@ function GroupList({ open, ...props }) {
         toggleUserHandler={toggleUser}
         contact={contact}
         key={contact._id}
+        checked={usersList[contact._id]}
       />
     );
   });
-
   return (
     <div className={`${classes.container} ${open ? classes.open : ""}`}>
       <div className={classes.head}>
-        <CancelIcon onClick={props.closeGroupList} />
+        <CancelIcon
+          onClick={() => {
+            setUsersList({});
+            props.closeGroupList();
+          }}
+        />
         <Search />
       </div>
       <div className={classes.body}>
-        {usersList.length > 1 && (
+        {Object.keys(usersList).length > 1 && (
           <div className={classes.submit}>
             <Input
               className={classes.input}

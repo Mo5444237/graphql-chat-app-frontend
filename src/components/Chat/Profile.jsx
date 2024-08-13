@@ -1,13 +1,14 @@
-import { useSelector } from "react-redux";
 import classes from "./Profile.module.css";
-
 import defaultImage from "../../assets/defaultImage.png";
+import { useState } from "react";
+
 import NewChatIcon from "../UI/NewChatIcon";
 import BackIcon from "../UI/Backicon";
-import { useState } from "react";
 import EditProfile from "./EditProfile";
 import BlockIcon from "../UI/BlockIcon";
 import BlockList from "./BlockList";
+
+import { useSelector } from "react-redux";
 
 function Profile({ open, ...props }) {
   const user = useSelector((state) => state.user.user);

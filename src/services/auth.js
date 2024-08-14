@@ -64,6 +64,10 @@ export const EDIT_PROFILE_MUTATION = gql`
       avatar
       online
       lastSeen
+      blockedUsers {
+        _id
+        name
+      }
     }
   }
 `;

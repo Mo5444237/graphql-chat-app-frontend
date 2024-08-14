@@ -21,6 +21,10 @@
   color: var(--fgColor-default);
 }
 
+.modal .container .error {
+  color: var(--error-color);
+}
+
 .modal .container form {
   display: flex;
   flex-direction: column;

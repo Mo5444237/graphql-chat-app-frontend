@@ -29,7 +29,7 @@ function EditProfile({ user, ...props }) {
   const [imageUrl, setImageUrl] = useState(null);
   const dispatch = useDispatch();
 
-  const [editProfile, { loading }] = useMutation(EDIT_PROFILE_MUTATION, {
+  const [editProfile, { loading, error }] = useMutation(EDIT_PROFILE_MUTATION, {
     onCompleted: () => {
       props.onHideModal();
     },
@@ -50,12 +50,12 @@ function EditProfile({ user, ...props }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (nameHasError) return;
+    // if (nameHasError) return;
     try {
       const { data } = await editProfile({
         variables: {
           userInput: {
-            name: nameValue || user?.name,
+            name: nameValue,
             avatar,
           },
         },
@@ -69,6 +69,7 @@ function EditProfile({ user, ...props }) {
 
       dispatch(userActions.setUser(data.editProfile));
     } catch (error) {
+      console.log(error.graphQLErrors[0])
       console.error("Error updating user:", error);
     }
   };
@@ -77,6 +78,7 @@ function EditProfile({ user, ...props }) {
     <Modal onClose={props.onHideModal} className={classes.modal}>
       <div className={classes.container}>
         <h2>Edit profile</h2>
+        {error?.message && <p className={classes.error}>{error.message}</p>}
         <form onSubmit={handleSubmit}>
           <div className={classes.avatar}>
             <div className={classes.img}>

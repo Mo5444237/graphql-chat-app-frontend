@@ -33,7 +33,7 @@ function Chat({ chatData, isTyping, typingUser, ...props }) {
 
   const isBlocked =
     chatUser &&
-    currentUser.blockedUsers.find((user) => user._id === chatUser._id);
+    currentUser?.blockedUsers.find((user) => user._id === chatUser._id);
 
   const showChatInfoHandler = () => {
     setShowChatInfo(true);

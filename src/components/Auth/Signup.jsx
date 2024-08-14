@@ -7,8 +7,10 @@ import useInput from "../hooks/use-input";
 
 import { useMutation } from "@apollo/client";
 import { SIGNUP_MUTATION } from "../../services/auth";
+import { useState } from "react";
 
 function Signup() {
+  const [errorFields, setErrorFields] = useState({});
   const navigate = useNavigate();
 
   const {
@@ -56,7 +58,7 @@ function Signup() {
     formIsValid = true;
   }
 
-  const [signup] = useMutation(SIGNUP_MUTATION, {
+  const [signup, { loading, error }] = useMutation(SIGNUP_MUTATION, {
     fetchPolicy: "no-cache",
   });
 
@@ -78,7 +80,15 @@ function Signup() {
       const { data } = await signup({ variables: { userInput: userData } });
       return navigate("/");
     } catch (error) {
-      console.log(error.message);
+      passwordReset();
+      passwordConfirmationReset();
+      const errors = error.graphQLErrors[0].data;
+      const errorsList = {};
+      errors.forEach((err) => {
+        errorsList[err.field] = err.msg;
+      });
+      setErrorFields(errorsList);
+      console.log(error.graphQLErrors[0]);
     }
   };
 
@@ -87,6 +97,7 @@ function Signup() {
       <div className={classes["container-form"]}>
         <form method="POST" onSubmit={submitHandler}>
           <h1>Create Account</h1>
+          {error?.message && <p className={classes.error}>{error.message}</p>}
           <Input
             className={classes.input}
             label="Full Name"
@@ -99,7 +110,7 @@ function Signup() {
               onChange: fullNameChangeHandler,
               onBlur: fullNameBlurHandler,
             }}
-            hasError={fullNameHasError}
+            hasError={fullNameHasError || errorFields?.name}
             errorMsg={"Enter a valid name"}
           />
           <Input
@@ -114,7 +125,7 @@ function Signup() {
               onChange: emailChangeHandler,
               onBlur: emailBlurHandler,
             }}
-            hasError={emailHasError}
+            hasError={emailHasError || errorFields?.email}
             errorMsg="Enter a valid E-mail"
           />
           <Input
@@ -130,6 +141,8 @@ function Signup() {
               onChange: passwordChangeHandler,
               onBlur: passwordBlurHandler,
             }}
+            hasError={passwordHasError || errorFields?.password}
+            errorMsg={errorFields?.password || "Enter a strong password"}
           />
           <Input
             className={classes.input}
@@ -144,11 +157,15 @@ function Signup() {
               onChange: passwordConfirmationChangeHandler,
               onBlur: passwordConfirmationBlurHandler,
             }}
-            hasError={passwordConfirmationHasError}
-            errorMsg="Passwords do not match"
+            hasError={
+              passwordConfirmationHasError || errorFields?.passwordConfirmation
+            }
+            errorMsg={
+              errorFields?.passwordConfirmation || "Passwords do not match"
+            }
           />
           <div className={classes.actions}>
-            <Button disabled={!formIsValid} type="submit" title="Sign Up" />
+            <Button disabled={formIsValid} type="submit" title="Sign Up" />
           </div>
           <div className={classes.options}>
             <p>

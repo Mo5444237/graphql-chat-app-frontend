@@ -23,7 +23,7 @@ function EditProfile({ user, ...props }) {
     hasError: nameHasError,
     valueBlurHandler: nameBlurHandler,
     valueChangeHandler: nameChangeHandler,
-  } = useInput((value) => true);
+  } = useInput((value) => value.trim() !== '', user?.name);
 
   const [avatar, setAvatar] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
@@ -100,7 +100,7 @@ function EditProfile({ user, ...props }) {
                 name: "name",
                 placeholder: "name",
                 type: "text",
-                value: nameValue || user?.name,
+                value: nameValue,
                 onChange: nameChangeHandler,
                 onBlur: nameBlurHandler,
               }}

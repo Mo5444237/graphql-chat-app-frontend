@@ -15,8 +15,8 @@
   justify-content: center;
   align-items: center;
   background-color: var(--bgColor-dark-200);
-    border-radius: 16px;
-    animation: slide 0.3s ease-in-out forwards;
+  border-radius: 16px;
+  animation: slide 0.3s ease-in-out forwards;
 }
 
 .container-form form {
@@ -34,8 +34,14 @@
   font-family: monospace;
 }
 
+.container-form form .error {
+  color: var(--error-color);
+  margin: 0;
+  text-align: center;
+}
+
 .container-form form .input:-internal-autofill-selected {
-    background-color: transparent !important;
+  background-color: transparent !important;
 }
 
 .container .container-form form .actions {
@@ -61,19 +67,18 @@
 }
 
 .container .container-form form .options {
-    margin-top: 1rem;
-   text-align: center;
+  margin-top: 1rem;
+  text-align: center;
 }
 
+.container .container-form form .options a {
+  color: var(--primary-color-muted);
+  transition: all 0.3s ease;
+  padding-left: 0.25rem;
+}
 
-.container .container-form form .options a{
-    color: var(--primary-color-muted);
-    transition: all 0.3s ease;
-    padding-left: .25rem;
-}   
-
-.container .container-form form .options a:hover{
-    color: var(--primary-color-default);
+.container .container-form form .options a:hover {
+  color: var(--primary-color-default);
 }
 
 @keyframes slide {

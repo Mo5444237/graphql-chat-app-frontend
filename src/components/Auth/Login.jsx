@@ -12,7 +12,6 @@ import { useDispatch } from "react-redux";
 import { userActions } from "../../store/user-slice";
 import { chatsActions } from "../../store/chats-slice";
 
-
 function Login() {
   const {
     value: emailValue,
@@ -37,7 +36,7 @@ function Login() {
     formIsValid = true;
   }
 
-  const [login, { loading }] = useMutation(LOGIN_MUTATION, {
+  const [login, { loading, error }] = useMutation(LOGIN_MUTATION, {
     fetchPolicy: "no-cache",
   });
   const dispatch = useDispatch();
@@ -54,7 +53,9 @@ function Login() {
     };
 
     try {
-      const { data } = await login({ variables: { userInput: userData } });
+      const { data, errors } = await login({
+        variables: { userInput: userData },
+      });
       if (data.login) {
         localStorage.setItem("token", data.login.token);
         dispatch(userActions.setUser(data.login.user));
@@ -72,6 +73,7 @@ function Login() {
       <div className={classes["container-form"]}>
         <form method="POST" onSubmit={submitHandler}>
           <h1>Welcome back</h1>
+          {error?.message && <p className={classes.error}>{error.message}</p>}
           <Input
             className={classes.input}
             label="E-mail"

@@ -22,7 +22,7 @@ function EditContact({ chat, ...props }) {
     hasError: contactNameHasError,
     valueBlurHandler: contactNameBlurHandler,
     valueChangeHandler: contactNameChangeHandler,
-  } = useInput((value) => value.length !== 0);
+  } = useInput((value) => value.trim() !== "", chat?.name);
 
   const currentUserId = useSelector((state) => state.user.user._id);
 
@@ -68,7 +68,7 @@ function EditContact({ chat, ...props }) {
                 name: "name",
                 placeholder: "Contact Name",
                 type: "text",
-                value: contactNameValue || chat?.name,
+                value: contactNameValue,
                 onChange: contactNameChangeHandler,
                 onBlur: contactNameBlurHandler,
               }}

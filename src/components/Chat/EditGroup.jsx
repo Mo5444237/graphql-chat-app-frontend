@@ -20,7 +20,7 @@ function EditGroup({ chat, ...props }) {
     hasError: groupNameHasError,
     valueBlurHandler: groupNameBlurHandler,
     valueChangeHandler: groupNameChangeHandler,
-  } = useInput((value) => value.length !== 0);
+  } = useInput((value) => value.trim() !== "", chat?.name);
 
   const [avatar, setAvatar] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
@@ -52,7 +52,7 @@ function EditGroup({ chat, ...props }) {
         variables: {
           chatInput: {
             chatId: chat._id,
-            name: groupNameValue || chat?.name,
+            name: groupNameValue,
             avatar,
           },
         },
@@ -95,7 +95,7 @@ function EditGroup({ chat, ...props }) {
                 name: "name",
                 placeholder: "Group Name",
                 type: "text",
-                value: groupNameValue || chat?.name,
+                value: groupNameValue,
                 onChange: groupNameChangeHandler,
                 onBlur: groupNameBlurHandler,
               }}

@@ -23,7 +23,7 @@ function EditProfile({ user, ...props }) {
     hasError: nameHasError,
     valueBlurHandler: nameBlurHandler,
     valueChangeHandler: nameChangeHandler,
-  } = useInput((value) => value.length !== 0);
+  } = useInput((value) => true);
 
   const [avatar, setAvatar] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);

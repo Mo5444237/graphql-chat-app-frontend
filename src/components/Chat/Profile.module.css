@@ -78,10 +78,15 @@
   object-fit: contain;
 }
 
-.avatar .name {
+.avatar .name,
+.avatar .email {
   margin: 0;
   font-weight: 500;
   font-size: 1.25rem;
+}
+
+.avatar .email {
+  color: var(--fgColor-muted);
 }
 
 .tabs {

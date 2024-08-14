@@ -47,6 +47,7 @@ function Profile({ open, ...props }) {
             <img src={user?.avatar || defaultImage} alt="User-image" />
           </div>
           <p className={classes.name}>{user?.name}</p>
+          <p className={classes.email}>{user?.email}</p>
         </div>
         <div className={classes.tabs}>
           <BlockList

@@ -1,6 +1,6 @@
 # graphql-chat-app-frontend
 
-This project is the frontend for a chat application, built using React, Vite, Redux Toolkit, Apollo Client, and Socket.IO-client. The application interacts with a GraphQL backend and provides real-time communication features.
+This project is the frontend for a chat application, built using React, Vite, Redux Toolkit, Apollo Client, and Socket.IO-client. The application interacts with a GraphQL backend and provides real-time communication features [Preview of the website](https://www.linkedin.com/posts/mo5444237_graphql-javascript-nodejs-activity-7230223257990254592-aGbm?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEdOpI4BiXAZqKzc2mt3yp-9DGKsW8qxpkg).
 
 ## Table of Contents
 
